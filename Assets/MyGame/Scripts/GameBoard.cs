@@ -6,7 +6,8 @@ using UnityEngine;
 public class GameBoard : MonoBehaviour
 {
     [Header("Art")]
-    [SerializeField] Material _material;
+    [SerializeField] Material _tileMaterial;
+    [SerializeField] Material _hoverMaterial;
 
     // LOGIC
     private const int TILE_COUNT_X = 5;
@@ -40,20 +41,24 @@ public class GameBoard : MonoBehaviour
             {
                 _currentHover = hitPosition;
                 _tiles[hitPosition.x, hitPosition.y].layer = LayerMask.NameToLayer("Hover");
+                _tiles[hitPosition.x, hitPosition.y].GetComponent<MeshRenderer>().material = _hoverMaterial;
             }
 
             // if we were already hovering a tile, change the previous one
             if (_currentHover != hitPosition)
             {
                 _tiles[_currentHover.x, _currentHover.y].layer = LayerMask.NameToLayer("Tile");
+                _tiles[_currentHover.x, _currentHover.y].GetComponent<MeshRenderer>().material = _tileMaterial;
                 _currentHover = hitPosition;
                 _tiles[hitPosition.x, hitPosition.y].layer = LayerMask.NameToLayer("Hover");
+                _tiles[hitPosition.x, hitPosition.y].GetComponent<MeshRenderer>().material = _hoverMaterial;
             }
             else
             {
                 if(_currentHover != -Vector2Int.one)
                 {
                     _tiles[_currentHover.x, _currentHover.y].layer = LayerMask.NameToLayer("Tile");
+                    _tiles[_currentHover.x, _currentHover.y].GetComponent<MeshRenderer>().material = _tileMaterial;
                     _currentHover = -Vector2Int.one;
                 }
             }
@@ -77,7 +82,7 @@ public class GameBoard : MonoBehaviour
 
         Mesh mesh = new Mesh();
         tileObject.AddComponent<MeshFilter>().mesh = mesh;
-        tileObject.AddComponent<MeshRenderer>().material = _material;
+        tileObject.AddComponent<MeshRenderer>().material = _tileMaterial;
 
         Vector3[] vertices = new Vector3[4];
         vertices[0] = new Vector3(x * tileSize, 0, y * tileSize);
