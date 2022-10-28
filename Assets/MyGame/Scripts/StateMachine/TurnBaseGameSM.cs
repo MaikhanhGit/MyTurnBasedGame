@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class TurnBaseGameSM : StateMachine
 {
+    [SerializeField] InputController _input;
+    public InputController Input => _input;
+
     private void Start()
     {
-        // set starting state here
+        ChangeState<SetupGameState>();
     }
 }
