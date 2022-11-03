@@ -5,16 +5,16 @@ using System;
 
 public class AITurnGameState : TurnBaseGameState
 {
-    public static event Action EnemyTurnBegan;
-    public static event Action EnemyTurnEnded;
+    public static event Action AITurnBegan;
+    public static event Action AITurnEnded;
 
     [SerializeField] float _pauseDuration = 1.5f;
 
     public override void Enter()
     {
-        EnemyTurnBegan?.Invoke();
+        AITurnBegan?.Invoke();
 
-        StartCoroutine(EnemyThinkingRoutine(_pauseDuration));
+        StartCoroutine(AIThinkingRoutine(_pauseDuration));
     }
 
     public override void Exit()
@@ -27,11 +27,11 @@ public class AITurnGameState : TurnBaseGameState
         
     }
 
-    IEnumerator EnemyThinkingRoutine(float pauseDuration)
+    IEnumerator AIThinkingRoutine(float pauseDuration)
     {
         yield return new WaitForSeconds(pauseDuration);
 
-        EnemyTurnEnded?.Invoke();
+        AITurnEnded?.Invoke();
 
         StateMachine.ChangeState<PlayerTurnGameState>();
     }
