@@ -11,6 +11,7 @@ public class GameBoard : MonoBehaviour
     [SerializeField] private float _tileSize = 1.0f;
     [SerializeField] private float _yOffset = 0.2f;
     [SerializeField] private Vector3 _boardCenter = Vector3.zero;
+    [SerializeField] private float _draggOffset = 1;
 
     [Header("Prefabs & Materials")]
     [SerializeField] private GameObject[] _prefabs;
@@ -20,6 +21,9 @@ public class GameBoard : MonoBehaviour
     // LOGIC
     private GamePiece[,] _gamePieces;
     private GamePiece _currentlyDragging;
+    private List<Vector2Int> _availableMoves = new List<Vector2Int>();
+    private List<GamePiece> deadPlayer = new List<GamePiece>();
+    private List<GamePiece> deadAI = new List<GamePiece>();
     private const float TILE_COUNT_X = 5;
     private const float TILE_COUNT_Y = 5;
     private GameObject[,] _tiles;
@@ -76,6 +80,11 @@ public class GameBoard : MonoBehaviour
                     if (true)
                     {
                         _currentlyDragging = _gamePieces[hitPosition.x, hitPosition.y];
+
+                        // get a list of available positions, highlight
+                        _availableMoves = _currentlyDragging.GetAvailableMoves(ref _gamePieces, 
+                            (int)TILE_COUNT_X, (int)TILE_COUNT_Y);
+                        HighLightTiles();
                     }
                 }
             }
@@ -90,6 +99,10 @@ public class GameBoard : MonoBehaviour
                     _currentlyDragging.SetPosition(GetTileCenter(previousPosition.x, previousPosition.y));
                     _currentlyDragging = null;
                 }
+                else
+                {
+                    _currentlyDragging = null;
+                }
             }
         }
         else
@@ -100,11 +113,25 @@ public class GameBoard : MonoBehaviour
                 _tiles[_currentHover.x, _currentHover.y].GetComponent<MeshRenderer>().material = _tileMaterial;
                 _currentHover = -Vector2Int.one;
             }
-        }
-        
-    }
 
-   
+            if(_currentlyDragging == true && Input.GetMouseButtonUp(0))
+            {
+                _currentlyDragging.SetPosition(GetTileCenter(_currentlyDragging._currentX, _currentlyDragging._currentY));
+                _currentlyDragging = null;
+            }
+        }        
+
+        // if currently dragging a piece, levitate
+        if(_currentlyDragging == true)
+        {
+            Plane horizontalPlane = new Plane(Vector3.up, Vector3.up * _yOffset);
+            float distance = 0.0f;
+            if(horizontalPlane.Raycast(ray, out distance))
+            {
+                _currentlyDragging.SetPosition(ray.GetPoint(distance) + Vector3.up * _draggOffset);
+            }
+        }
+    }   
 
     // Generate the game board
     void GenerateAllTiles(float tileSize, float tileCountX, float tileCountY)
@@ -201,25 +228,46 @@ public class GameBoard : MonoBehaviour
     {
         _gamePieces[x, y]._currentX = x;
         _gamePieces[x, y]._currentY = y;
-        _gamePieces[x, y].transform.position = GetTileCenter(x, y);
+        _gamePieces[x, y].SetPosition(GetTileCenter(x, y), force);
     }
 
     private Vector3 GetTileCenter(int x, int y)
     {
         return new Vector3(x * _tileSize, _yOffset, y * _tileSize) - _bounds + new Vector3(_tileSize/2, 0, _tileSize/2);
     }
+
+    // Highlight Tiles
+    private void HighLightTiles()
+    {
+        for (int i = 0; i < _availableMoves.Count; i++)
+        {
+            _tiles[_availableMoves[i].x, _availableMoves[i].y].layer = LayerMask.NameToLayer("Highlight");
+        }
+    }
+    private void RemoveHighLightTiles()
+    {
+        for (int i = 0; i < _availableMoves.Count; i++)
+        {
+            _tiles[_availableMoves[i].x, _availableMoves[i].y].layer = LayerMask.NameToLayer("Tile");
+            _availableMoves.Clear();
+        }
+    }
+
     // Operations
     private bool MoveTo(GamePiece currentPiece, int x, int y)
     {
         Vector2Int previousPosition = new Vector2Int(currentPiece._currentX, currentPiece._currentY);
 
         // if there's another piece on the target position?
-        if(_gamePieces[x, y] != null)
+        if (_gamePieces[x, y] != null)
         {
             GamePiece otherGP = _gamePieces[x, y];
 
+            // determine how to eliminate game pieces here
             return false;
         }
+
+        
 
         _gamePieces[x, y] = currentPiece;
         _gamePieces[previousPosition.x, previousPosition.y] = null;
