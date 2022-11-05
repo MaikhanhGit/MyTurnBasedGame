@@ -8,6 +8,7 @@ public class GameBoard : MonoBehaviour
     [Header("Art")]
     [SerializeField] private Material _tileMaterial;
     [SerializeField] private Material _hoverMaterial;
+    [SerializeField] private Material _highlightMaterial;
     [SerializeField] private float _tileSize = 1.0f;
     [SerializeField] private float _yOffset = 0.2f;
     [SerializeField] private Vector3 _boardCenter = Vector3.zero;
@@ -57,18 +58,22 @@ public class GameBoard : MonoBehaviour
             if (_currentHover == -Vector2Int.one)
             {
                 _currentHover = hitPosition;
-                _tiles[hitPosition.x, hitPosition.y].layer = LayerMask.NameToLayer("Hover");
-                _tiles[hitPosition.x, hitPosition.y].GetComponent<MeshRenderer>().material = _hoverMaterial;
+                SetHoverColor(hitPosition);
             }
 
             // if we were already hovering a tile, change the previous one
             if (_currentHover != hitPosition)
             {
-                _tiles[_currentHover.x, _currentHover.y].layer = LayerMask.NameToLayer("Tile");
-                _tiles[_currentHover.x, _currentHover.y].GetComponent<MeshRenderer>().material = _tileMaterial;
+                if (ContainsValidMove(ref _availableMoves, _currentHover))
+                {
+                    HighLightTiles();
+                }
+                else
+                {
+                    SetTileColor();
+                }
                 _currentHover = hitPosition;
-                _tiles[hitPosition.x, hitPosition.y].layer = LayerMask.NameToLayer("Hover");
-                _tiles[hitPosition.x, hitPosition.y].GetComponent<MeshRenderer>().material = _hoverMaterial;
+                SetHoverColor(hitPosition);
             }
 
             // if we press down on the mouse
@@ -88,29 +93,37 @@ public class GameBoard : MonoBehaviour
                     }
                 }
             }
-            // if we releasing the nouse button
+            // if we releasing the mouse button
             if (_currentlyDragging != null && Input.GetMouseButtonUp(0))
             {
                 Vector2Int previousPosition = new Vector2Int(_currentlyDragging._currentX, _currentlyDragging._currentY);
 
                 bool validMove = MoveTo(_currentlyDragging, hitPosition.x, hitPosition.y);
+                
                 if(validMove == false)
                 {
                     _currentlyDragging.SetPosition(GetTileCenter(previousPosition.x, previousPosition.y));
                     _currentlyDragging = null;
                 }
-                else
-                {
-                    _currentlyDragging = null;
-                }
+                
+                _currentlyDragging = null;
+
+                RemoveHighLightTiles();
             }
         }
         else
         {
             if (_currentHover != -Vector2Int.one)
             {
-                _tiles[_currentHover.x, _currentHover.y].layer = LayerMask.NameToLayer("Tile");
-                _tiles[_currentHover.x, _currentHover.y].GetComponent<MeshRenderer>().material = _tileMaterial;
+                if (ContainsValidMove(ref _availableMoves, _currentHover))
+                {
+                    HighLightTiles();
+                }
+                else
+                {
+                    SetTileColor();
+                }
+
                 _currentHover = -Vector2Int.one;
             }
 
@@ -118,6 +131,7 @@ public class GameBoard : MonoBehaviour
             {
                 _currentlyDragging.SetPosition(GetTileCenter(_currentlyDragging._currentX, _currentlyDragging._currentY));
                 _currentlyDragging = null;
+                RemoveHighLightTiles();
             }
         }        
 
@@ -242,6 +256,7 @@ public class GameBoard : MonoBehaviour
         for (int i = 0; i < _availableMoves.Count; i++)
         {
             _tiles[_availableMoves[i].x, _availableMoves[i].y].layer = LayerMask.NameToLayer("Highlight");
+            _tiles[_availableMoves[i].x, _availableMoves[i].y].GetComponent<MeshRenderer>().material = _highlightMaterial;
         }
     }
     private void RemoveHighLightTiles()
@@ -249,13 +264,29 @@ public class GameBoard : MonoBehaviour
         for (int i = 0; i < _availableMoves.Count; i++)
         {
             _tiles[_availableMoves[i].x, _availableMoves[i].y].layer = LayerMask.NameToLayer("Tile");
-            _availableMoves.Clear();
+            _tiles[_availableMoves[i].x, _availableMoves[i].y].GetComponent<MeshRenderer>().material = _tileMaterial;            
         }
+        _availableMoves.Clear();
     }
 
     // Operations
+    private bool ContainsValidMove(ref List<Vector2Int> moves, Vector2 pos)
+    {
+        for (int i = 0; i < moves.Count; i++)
+        {
+            if(moves[i].x == pos.x && moves[i].y == pos.y)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     private bool MoveTo(GamePiece currentPiece, int x, int y)
     {
+        if(ContainsValidMove(ref _availableMoves, new Vector2(x, y)) == false)
+        {
+            return false;
+        }
         Vector2Int previousPosition = new Vector2Int(currentPiece._currentX, currentPiece._currentY);
 
         // if there's another piece on the target position?
@@ -286,6 +317,16 @@ public class GameBoard : MonoBehaviour
         return -Vector2Int.one; // Invalid
     }
 
-    
+    private void SetTileColor()
+    {
+        _tiles[_currentHover.x, _currentHover.y].layer = LayerMask.NameToLayer("Tile");
+        _tiles[_currentHover.x, _currentHover.y].GetComponent<MeshRenderer>().material = _tileMaterial;
+    }
+
+    private void SetHoverColor(Vector2Int hitPosition)
+    {
+        _tiles[hitPosition.x, hitPosition.y].layer = LayerMask.NameToLayer("Hover");
+        _tiles[hitPosition.x, hitPosition.y].GetComponent<MeshRenderer>().material = _hoverMaterial;
+    }     
 
 }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2159.3408, g: 2263.7285, b: 3287.2852, a: 1}
+  m_IndirectSpecularColor: {r: 2161.1494, g: 2265.2793, b: 3288.4922, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1126,6 +1126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tileMaterial: {fileID: 2100000, guid: 328ca231ecabfb443b09bb47b69ecee9, type: 2}
   _hoverMaterial: {fileID: 2100000, guid: 1d7c2b150d4abf34a87fbc21e42464c1, type: 2}
+  _highlightMaterial: {fileID: 2100000, guid: a3884eb1b0bc856429b52bafb21e2361, type: 2}
   _tileSize: 1
   _yOffset: 0.2
   _boardCenter: {x: 0, y: 0, z: 0}
