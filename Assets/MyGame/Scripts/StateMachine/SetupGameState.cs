@@ -6,16 +6,13 @@ public class SetupGameState : TurnBaseGameState
 {
     [SerializeField] private int _totalPlayerGamePieces = 7;
     [SerializeField] private int _totalAIGamePieces = 7;
-    [SerializeField] GameBoard _gameBoard;
-
-    GameBoard _board;
+        
     bool _activated = false;
 
     public override void Enter()
     {
-        // build gameboard
-        _board = _gameBoard.GetComponent<GameBoard>();
-        _board.BuildGameBoard();
+        // build gameboard        
+        StateMachine.GameBoardInput.BuildGameBoard();
         _activated = false;
     }
 

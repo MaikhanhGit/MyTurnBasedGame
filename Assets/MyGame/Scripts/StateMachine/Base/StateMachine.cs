@@ -21,7 +21,7 @@ public abstract class StateMachine : MonoBehaviour
                 "to the State Machines!");
             return;
         }
-        // otherwise, we foind our state!
+        // otherwise, we found our state!
         InitiateStateChange(targetState);
     }
 

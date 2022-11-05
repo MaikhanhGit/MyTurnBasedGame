@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameBoard : MonoBehaviour
 {
@@ -13,10 +14,14 @@ public class GameBoard : MonoBehaviour
     [SerializeField] private float _yOffset = 0.2f;
     [SerializeField] private Vector3 _boardCenter = Vector3.zero;
     [SerializeField] private float _draggOffset = 1;
+    
 
     [Header("Prefabs & Materials")]
     [SerializeField] private GameObject[] _prefabs;
     [SerializeField] private Material[] _teamMaterial;
+
+    [SerializeField] PlayerTurnGameState _playerTurnGameState;
+    [SerializeField] AITurnGameState _AITurnGameState;
        
     // LOGIC
     private GamePiece[,] _gamePieces;
@@ -32,26 +37,32 @@ public class GameBoard : MonoBehaviour
     private Vector3 _bounds;
     private bool _playersTurn = false;
     private bool _AIsTurn = false;
-    TurnBaseGameSM StateMachine;
-
+    private PlayerTurnGameState PlayerTurnGameState;
+    private AITurnGameState AITurnGameState;
+    private GamePiece[,] _AIgamepieces;
+    private GamePiece _AIcurrentPiece;
+    int playerTeam = 0;
+    int AITeam = 1;
 
     private void Awake()
-    {
-        StateMachine = GetComponent<TurnBaseGameSM>();
-    }    
-        private void Update()
-    {
-        if(_currentCamera == null)
-        {
-            _currentCamera = Camera.main;
-            return;
-        }
+    {       
+        PlayerTurnGameState = _playerTurnGameState.GetComponent<PlayerTurnGameState>();
+        AITurnGameState = _AITurnGameState.GetComponent<AITurnGameState>();
 
-        RaycastHit info;
-        Ray ray = _currentCamera.ScreenPointToRay(Input.mousePosition);
-        // is it our turn?
+    }
+    private void Update()
+    {
         if (_playersTurn == true)
         {
+            if (_currentCamera == null)
+            {
+                _currentCamera = Camera.main;
+                return;
+            }
+
+            RaycastHit info;
+            Ray ray = _currentCamera.ScreenPointToRay(Input.mousePosition);
+
             if (Physics.Raycast(ray, out info, 100, LayerMask.GetMask("Tile", "Hover", "Highlight")))
             {
                 // get the indexes of the tiles I've hit
@@ -79,17 +90,21 @@ public class GameBoard : MonoBehaviour
                     SetHoverColor(hitPosition);
                 }
 
+
+                // if player's turn
+
                 // if we press down on the mouse
                 if (Input.GetMouseButtonDown(0))
                 {
-                    if (_gamePieces[hitPosition.x, hitPosition.y] != null)
-                    {                                           
-                            _currentlyDragging = _gamePieces[hitPosition.x, hitPosition.y];
+                    if (_gamePieces[hitPosition.x, hitPosition.y] != null &&
+                        _gamePieces[hitPosition.x, hitPosition.y]._team == playerTeam)
+                    {
+                        _currentlyDragging = _gamePieces[hitPosition.x, hitPosition.y];
 
-                            // get a list of available positions, highlight
-                            _availableMoves = _currentlyDragging.GetAvailableMoves(ref _gamePieces,
-                                (int)TILE_COUNT_X, (int)TILE_COUNT_Y);
-                            HighLightTiles();                        
+                        // get a list of available positions, highlight
+                        _availableMoves = _currentlyDragging.GetAvailableMoves(ref _gamePieces,
+                            (int)TILE_COUNT_X, (int)TILE_COUNT_Y);
+                        HighLightTiles();
                     }
                 }
                 // if we releasing the mouse button
@@ -104,12 +119,17 @@ public class GameBoard : MonoBehaviour
                         _currentlyDragging.SetPosition(GetTileCenter(previousPosition.x, previousPosition.y));
                         _currentlyDragging = null;
                     }
-
-                    _currentlyDragging = null;
+                    else
+                    {
+                        _currentlyDragging = null;
+                        PlayerTurnGameState.Exit();
+                    }
 
                     RemoveHighLightTiles();
+                    
                 }
             }
+
             else
             {
                 if (_currentHover != -Vector2Int.one)
@@ -130,28 +150,69 @@ public class GameBoard : MonoBehaviour
                 {
                     _currentlyDragging.SetPosition(GetTileCenter(_currentlyDragging._currentX, _currentlyDragging._currentY));
                     _currentlyDragging = null;
+
                     RemoveHighLightTiles();
                 }
             }
 
-            // if currently dragging a piece, levitate
-            if (_currentlyDragging == true)
-            {
-                Plane horizontalPlane = new Plane(Vector3.up, Vector3.up * _yOffset);
-                float distance = 0.0f;
-                if (horizontalPlane.Raycast(ray, out distance))
+                // if currently dragging a piece, levitate
+                if (_currentlyDragging == true)
                 {
-                    _currentlyDragging.SetPosition(ray.GetPoint(distance) + Vector3.up * _draggOffset);
+                    Plane horizontalPlane = new Plane(Vector3.up, Vector3.up * _yOffset);
+                    float distance = 0.0f;
+                    if (horizontalPlane.Raycast(ray, out distance))
+                    {
+                        _currentlyDragging.SetPosition(ray.GetPoint(distance) + Vector3.up * _draggOffset);
+                    }
+                }
+            
+        }
+
+            // if AI's turn
+        if (_AIsTurn == true)
+        {
+            // change state            
+            // pick a random AI piece
+            for (int x = 0; x < TILE_COUNT_X; x++)
+            {
+                for (int y = 0; y < TILE_COUNT_Y; y++)
+                {
+                    if (_gamePieces[x, y] != null &&
+                        _gamePieces[x, y]._team == AITeam)
+                    {
+                        _AIcurrentPiece = _gamePieces[x, y];
+                        break;
+                    }
                 }
             }
-        }
+            //find a valid spot
+            List<Vector2Int> availableMoves = new List<Vector2Int>();
 
-        if (_AIsTurn == true)
-        {            
-            StateMachine.ChangeState<AITurnGameState>();
-        }
-    }   
+            for (int x = 0; x < TILE_COUNT_X; x++)
+            {
+                for (int y = 0; y < TILE_COUNT_Y; y++)
+                {
+                    if (_gamePieces[x, y] != null &&
+                        _gamePieces[x, y]._team == AITeam)
+                    {
+                        _AIcurrentPiece = _gamePieces[x, y];
+                        break;
+                    }
+                }
+            }
 
+            availableMoves = _AIcurrentPiece.GetAvailableMoves(ref _gamePieces,
+                            (int)TILE_COUNT_X, (int)TILE_COUNT_Y);
+            // move to valid spot
+            int random = Random.Range(0, availableMoves.Count);
+            Vector2Int randomMove = availableMoves[random];
+            MoveTo(_AIcurrentPiece, randomMove.x, randomMove.y);
+            // check for kill
+            // change state            
+            AITurnGameState.Exit();
+        }
+            
+    } 
     // build gameboard
     public void BuildGameBoard()
     {
@@ -163,14 +224,40 @@ public class GameBoard : MonoBehaviour
     // player's turn
     public void ActivatePlayersTurn()
     {
+        Debug.Log("Activate Player");
         _AIsTurn = false;
         _playersTurn = true;        
     }
 
     public void DeactivatePlayersTurn()
     {
+        Debug.Log("Deactivate Player");
         _playersTurn = false;
         _AIsTurn = true;
+    }
+
+    public void ActivateAIsTurn()
+    {
+
+    }
+
+    public void DectivateAIsTurn()
+    {
+
+    }
+
+    private void OnAIsTurn()
+    {
+        // pick a random AI piece
+        
+
+        // move AI piece
+        // check if there's a kill
+    }
+
+    private void CheckForKill()
+    {
+
     }
 
     // Generate the game board
@@ -215,10 +302,7 @@ public class GameBoard : MonoBehaviour
     // Spawning game pieces
     private void SpawnAllPieces()
     {
-        _gamePieces = new GamePiece[(int)TILE_COUNT_X, (int)TILE_COUNT_Y];
-
-        int playerTeam = 0;
-        int AITeam = 1;
+        _gamePieces = new GamePiece[(int)TILE_COUNT_X, (int)TILE_COUNT_Y];               
 
         // player team
         _gamePieces[0, 1] = SpawnSinglePiece(GamePieceType.PlayerPiece, playerTeam);
@@ -328,7 +412,7 @@ public class GameBoard : MonoBehaviour
         _gamePieces[previousPosition.x, previousPosition.y] = null;
 
         PositionSinglePiece(x, y);
-        _playersTurn = false;
+        
         return true;
     }
     private Vector2Int LookupTileIndex(GameObject hitInfo)

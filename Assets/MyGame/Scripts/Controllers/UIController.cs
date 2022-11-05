@@ -6,6 +6,7 @@ using TMPro;
 public class UIController : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI _AIThinkingTextUI = null;
+    
 
     private void OnEnable()
     {
