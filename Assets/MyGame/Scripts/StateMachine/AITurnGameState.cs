@@ -11,7 +11,7 @@ public class AITurnGameState : TurnBaseGameState
     [SerializeField] float _pauseDuration = 1.5f;
 
     public override void Enter()
-    {
+    {        
         AITurnBegan?.Invoke();
 
         StartCoroutine(AIThinkingRoutine(_pauseDuration));

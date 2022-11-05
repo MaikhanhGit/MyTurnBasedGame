@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2161.1494, g: 2265.2793, b: 3288.4922, a: 1}
+  m_IndirectSpecularColor: {r: 2160.1182, g: 2264.4824, b: 3287.914, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -971,6 +971,7 @@ GameObject:
   - component: {fileID: 373557457}
   - component: {fileID: 373557458}
   - component: {fileID: 373557459}
+  - component: {fileID: 373557460}
   m_Layer: 0
   m_Name: StateController
   m_TagString: Untagged
@@ -1020,6 +1021,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _totalPlayerGamePieces: 7
   _totalAIGamePieces: 7
+  _gameBoard: {fileID: 536210155}
 --- !u!114 &373557458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1033,6 +1035,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playTurnTextUI: {fileID: 1379503137}
+  _gameBoard: {fileID: 536210155}
 --- !u!114 &373557459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1046,6 +1049,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pauseDuration: 1.5
+--- !u!114 &373557460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 373557454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c52ee854c5bae9546bf1ac42cc9bdbc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tileMaterial: {fileID: 2100000, guid: 328ca231ecabfb443b09bb47b69ecee9, type: 2}
+  _hoverMaterial: {fileID: 2100000, guid: 1d7c2b150d4abf34a87fbc21e42464c1, type: 2}
+  _highlightMaterial: {fileID: 2100000, guid: a3884eb1b0bc856429b52bafb21e2361, type: 2}
+  _tileSize: 1
+  _yOffset: 0.2
+  _boardCenter: {x: 0, y: 0, z: 0}
+  _draggOffset: 1
+  _prefabs:
+  - {fileID: 1789636221855024741, guid: c38ee9e0e64c95848aa217fe7f6d249a, type: 3}
+  - {fileID: 8255377790545285495, guid: 4d9e91ba4e30b6d42bccdbd6183b2837, type: 3}
+  _teamMaterial:
+  - {fileID: 2100000, guid: 2528aef066d43554ab83fba051acf55b, type: 2}
+  - {fileID: 2100000, guid: c0947c961df929a43b7a6827dd3032ef, type: 2}
 --- !u!1 &432432459
 GameObject:
   m_ObjectHideFlags: 0
@@ -1104,7 +1132,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 536210154}
-  - component: {fileID: 536210153}
+  - component: {fileID: 536210155}
+  - component: {fileID: 536210156}
   m_Layer: 0
   m_Name: GameBoard
   m_TagString: Untagged
@@ -1112,7 +1141,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &536210153
+--- !u!4 &536210154
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536210152}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &536210155
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1137,21 +1181,19 @@ MonoBehaviour:
   _teamMaterial:
   - {fileID: 2100000, guid: 2528aef066d43554ab83fba051acf55b, type: 2}
   - {fileID: 2100000, guid: c0947c961df929a43b7a6827dd3032ef, type: 2}
---- !u!4 &536210154
-Transform:
+--- !u!114 &536210156
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 536210152}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94aa0d8f91175d24f8052f8059a4f193, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _input: {fileID: 0}
 --- !u!1 &536467031
 GameObject:
   m_ObjectHideFlags: 0
@@ -2986,6 +3028,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acb57e74c53d862478c27d6ece070345, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameBoard: {fileID: 536210155}
 --- !u!1 &1440641973
 GameObject:
   m_ObjectHideFlags: 0

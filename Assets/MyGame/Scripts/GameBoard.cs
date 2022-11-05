@@ -17,8 +17,7 @@ public class GameBoard : MonoBehaviour
     [Header("Prefabs & Materials")]
     [SerializeField] private GameObject[] _prefabs;
     [SerializeField] private Material[] _teamMaterial;
-
-
+       
     // LOGIC
     private GamePiece[,] _gamePieces;
     private GamePiece _currentlyDragging;
@@ -31,15 +30,16 @@ public class GameBoard : MonoBehaviour
     private Camera _currentCamera;
     private Vector2Int _currentHover;
     private Vector3 _bounds;
+    private bool _playersTurn = false;
+    private bool _AIsTurn = false;
+    TurnBaseGameSM StateMachine;
+
 
     private void Awake()
     {
-        GenerateAllTiles(_tileSize, TILE_COUNT_X, TILE_COUNT_Y);
-        SpawnAllPieces();
-        PositionAllPieces();
-    }
-
-    private void Update()
+        StateMachine = GetComponent<TurnBaseGameSM>();
+    }    
+        private void Update()
     {
         if(_currentCamera == null)
         {
@@ -49,103 +49,129 @@ public class GameBoard : MonoBehaviour
 
         RaycastHit info;
         Ray ray = _currentCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out info, 100, LayerMask.GetMask("Tile", "Hover", "Highlight")))
+        // is it our turn?
+        if (_playersTurn == true)
         {
-            // get the indexes of the tiles I've hit
-            Vector2Int hitPosition = LookupTileIndex(info.transform.gameObject);
-
-            // if we're hovering a tile after not hovering any tiles
-            if (_currentHover == -Vector2Int.one)
+            if (Physics.Raycast(ray, out info, 100, LayerMask.GetMask("Tile", "Hover", "Highlight")))
             {
-                _currentHover = hitPosition;
-                SetHoverColor(hitPosition);
-            }
+                // get the indexes of the tiles I've hit
+                Vector2Int hitPosition = LookupTileIndex(info.transform.gameObject);
 
-            // if we were already hovering a tile, change the previous one
-            if (_currentHover != hitPosition)
-            {
-                if (ContainsValidMove(ref _availableMoves, _currentHover))
+                // if we're hovering a tile after not hovering any tiles
+                if (_currentHover == -Vector2Int.one)
                 {
-                    HighLightTiles();
+                    _currentHover = hitPosition;
+                    SetHoverColor(hitPosition);
                 }
-                else
-                {
-                    SetTileColor();
-                }
-                _currentHover = hitPosition;
-                SetHoverColor(hitPosition);
-            }
 
-            // if we press down on the mouse
-            if (Input.GetMouseButtonDown(0))
-            {
-                if(_gamePieces[hitPosition.x, hitPosition.y] != null)
+                // if we were already hovering a tile, change the previous one
+                if (_currentHover != hitPosition)
                 {
-                    // is it our turn?
-                    if (true)
+                    if (ContainsValidMove(ref _availableMoves, _currentHover))
                     {
-                        _currentlyDragging = _gamePieces[hitPosition.x, hitPosition.y];
-
-                        // get a list of available positions, highlight
-                        _availableMoves = _currentlyDragging.GetAvailableMoves(ref _gamePieces, 
-                            (int)TILE_COUNT_X, (int)TILE_COUNT_Y);
                         HighLightTiles();
                     }
+                    else
+                    {
+                        SetTileColor();
+                    }
+                    _currentHover = hitPosition;
+                    SetHoverColor(hitPosition);
+                }
+
+                // if we press down on the mouse
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (_gamePieces[hitPosition.x, hitPosition.y] != null)
+                    {                                           
+                            _currentlyDragging = _gamePieces[hitPosition.x, hitPosition.y];
+
+                            // get a list of available positions, highlight
+                            _availableMoves = _currentlyDragging.GetAvailableMoves(ref _gamePieces,
+                                (int)TILE_COUNT_X, (int)TILE_COUNT_Y);
+                            HighLightTiles();                        
+                    }
+                }
+                // if we releasing the mouse button
+                if (_currentlyDragging != null && Input.GetMouseButtonUp(0))
+                {
+                    Vector2Int previousPosition = new Vector2Int(_currentlyDragging._currentX, _currentlyDragging._currentY);
+
+                    bool validMove = MoveTo(_currentlyDragging, hitPosition.x, hitPosition.y);
+
+                    if (validMove == false)
+                    {
+                        _currentlyDragging.SetPosition(GetTileCenter(previousPosition.x, previousPosition.y));
+                        _currentlyDragging = null;
+                    }
+
+                    _currentlyDragging = null;
+
+                    RemoveHighLightTiles();
                 }
             }
-            // if we releasing the mouse button
-            if (_currentlyDragging != null && Input.GetMouseButtonUp(0))
+            else
             {
-                Vector2Int previousPosition = new Vector2Int(_currentlyDragging._currentX, _currentlyDragging._currentY);
-
-                bool validMove = MoveTo(_currentlyDragging, hitPosition.x, hitPosition.y);
-                
-                if(validMove == false)
+                if (_currentHover != -Vector2Int.one)
                 {
-                    _currentlyDragging.SetPosition(GetTileCenter(previousPosition.x, previousPosition.y));
-                    _currentlyDragging = null;
-                }
-                
-                _currentlyDragging = null;
+                    if (ContainsValidMove(ref _availableMoves, _currentHover))
+                    {
+                        HighLightTiles();
+                    }
+                    else
+                    {
+                        SetTileColor();
+                    }
 
-                RemoveHighLightTiles();
+                    _currentHover = -Vector2Int.one;
+                }
+
+                if (_currentlyDragging == true && Input.GetMouseButtonUp(0))
+                {
+                    _currentlyDragging.SetPosition(GetTileCenter(_currentlyDragging._currentX, _currentlyDragging._currentY));
+                    _currentlyDragging = null;
+                    RemoveHighLightTiles();
+                }
+            }
+
+            // if currently dragging a piece, levitate
+            if (_currentlyDragging == true)
+            {
+                Plane horizontalPlane = new Plane(Vector3.up, Vector3.up * _yOffset);
+                float distance = 0.0f;
+                if (horizontalPlane.Raycast(ray, out distance))
+                {
+                    _currentlyDragging.SetPosition(ray.GetPoint(distance) + Vector3.up * _draggOffset);
+                }
             }
         }
-        else
-        {
-            if (_currentHover != -Vector2Int.one)
-            {
-                if (ContainsValidMove(ref _availableMoves, _currentHover))
-                {
-                    HighLightTiles();
-                }
-                else
-                {
-                    SetTileColor();
-                }
 
-                _currentHover = -Vector2Int.one;
-            }
-
-            if(_currentlyDragging == true && Input.GetMouseButtonUp(0))
-            {
-                _currentlyDragging.SetPosition(GetTileCenter(_currentlyDragging._currentX, _currentlyDragging._currentY));
-                _currentlyDragging = null;
-                RemoveHighLightTiles();
-            }
-        }        
-
-        // if currently dragging a piece, levitate
-        if(_currentlyDragging == true)
-        {
-            Plane horizontalPlane = new Plane(Vector3.up, Vector3.up * _yOffset);
-            float distance = 0.0f;
-            if(horizontalPlane.Raycast(ray, out distance))
-            {
-                _currentlyDragging.SetPosition(ray.GetPoint(distance) + Vector3.up * _draggOffset);
-            }
+        if (_AIsTurn == true)
+        {            
+            StateMachine.ChangeState<AITurnGameState>();
         }
     }   
+
+    // build gameboard
+    public void BuildGameBoard()
+    {
+        GenerateAllTiles(_tileSize, TILE_COUNT_X, TILE_COUNT_Y);
+        SpawnAllPieces();
+        PositionAllPieces();
+    }
+
+    // player's turn
+    public void ActivatePlayersTurn()
+    {
+        _AIsTurn = false;
+        _playersTurn = true;        
+    }
+
+    public void DeactivatePlayersTurn()
+    {
+        _playersTurn = false;
+        _AIsTurn = true;
+    }
 
     // Generate the game board
     void GenerateAllTiles(float tileSize, float tileCountX, float tileCountY)
@@ -214,7 +240,7 @@ public class GameBoard : MonoBehaviour
 
     private GamePiece SpawnSinglePiece(GamePieceType type, int team)
     {
-        GamePiece piece = Instantiate(_prefabs[(int)type - 1], transform).GetComponent<GamePiece>();
+        GamePiece piece = Instantiate(_prefabs[(int)type], transform).GetComponent<GamePiece>();
 
         piece._type = type;
         piece._team = team;
@@ -296,15 +322,13 @@ public class GameBoard : MonoBehaviour
 
             // determine how to eliminate game pieces here
             return false;
-        }
-
-        
+        }        
 
         _gamePieces[x, y] = currentPiece;
         _gamePieces[previousPosition.x, previousPosition.y] = null;
 
         PositionSinglePiece(x, y);
-
+        _playersTurn = false;
         return true;
     }
     private Vector2Int LookupTileIndex(GameObject hitInfo)

@@ -5,9 +5,9 @@ using UnityEngine;
 
 public enum GamePieceType
 {
-    None = 0,
-    PlayerPiece = 1,
-    AIPiece = 2
+    None = -1,
+    PlayerPiece = 0,
+    AIPiece = 1
 }
 public class GamePiece : MonoBehaviour
 {
@@ -28,12 +28,7 @@ public class GamePiece : MonoBehaviour
 
     public virtual List<Vector2Int> GetAvailableMoves(ref GamePiece[,] board, int tileCountX, int tileCountY)
     {
-        List<Vector2Int> r = new List<Vector2Int>();
-
-        r.Add(new Vector2Int(1, 2));
-        r.Add(new Vector2Int(3, 2));
-        r.Add(new Vector2Int(1, 3));
-        r.Add(new Vector2Int(3, 3));
+        List<Vector2Int> r = new List<Vector2Int>();        
 
         return r;
     }

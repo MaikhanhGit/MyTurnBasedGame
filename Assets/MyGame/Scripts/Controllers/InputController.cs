@@ -5,10 +5,19 @@ using System;
 
 public class InputController : MonoBehaviour
 {
+    [SerializeField] GameBoard _gameBoard;
+
+    GameBoard _board;
+
     public event Action PressedConfirm = delegate { };
     public event Action PressedCancel = delegate { };
     public event Action PressedLeft = delegate { };
     public event Action PressedRight = delegate { };
+
+    private void Awake()
+    {
+        _board = _gameBoard.GetComponent<GameBoard>();
+    }
 
     private void Update()
     {
