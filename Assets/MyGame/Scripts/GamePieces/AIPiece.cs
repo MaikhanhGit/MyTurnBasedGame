@@ -5,7 +5,7 @@ using UnityEngine;
 public class AIPiece : GamePiece
 {
     public override List<Vector2Int> GetAvailableMoves(ref GamePiece[,] board, int tileCountX, int tileCountY)
-    {
+    {        
         List<Vector2Int> r = new List<Vector2Int>();
         // Up        
         if ((_currentY + 1) < tileCountY)
@@ -80,5 +80,5 @@ public class AIPiece : GamePiece
         }
 
         return r;
-    }
+    } 
 }

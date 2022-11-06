@@ -21,7 +21,7 @@ public class AITurnGameState : TurnBaseGameState
     public override void Exit()
     {
         StartCoroutine(AIThinkingRoutine(_pauseDuration));
-        // StateMachine.ChangeState<PlayerTurnGameState>();
+        //StateMachine.ChangeState<PlayerTurnGameState>();
     }
 
     public override void Tick()
@@ -31,10 +31,8 @@ public class AITurnGameState : TurnBaseGameState
 
     IEnumerator AIThinkingRoutine(float pauseDuration)
     {
-        yield return new WaitForSeconds(pauseDuration);
-
+        yield return new WaitForSeconds(pauseDuration);        
         AITurnEnded?.Invoke();
-
         StateMachine.ChangeState<PlayerTurnGameState>();
     }
 }

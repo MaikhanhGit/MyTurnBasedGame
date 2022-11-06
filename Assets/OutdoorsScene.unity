@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2184.6543, g: 2358.586, b: 3626.1172, a: 1}
+  m_IndirectSpecularColor: {r: 2161.165, g: 2265.2793, b: 3288.4922, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1156,6 +1156,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: c0947c961df929a43b7a6827dd3032ef, type: 2}
   _playerTurnGameState: {fileID: 373557458}
   _AITurnGameState: {fileID: 373557459}
+  _setupGameState: {fileID: 373557457}
 --- !u!114 &536210156
 MonoBehaviour:
   m_ObjectHideFlags: 0

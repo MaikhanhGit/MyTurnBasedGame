@@ -50,4 +50,12 @@ public class GamePiece : MonoBehaviour
             transform.localScale = _desiredScale;
         }
     }
+
+    public virtual List<Vector2Int> CheckForKill(ref GamePiece[,] board, int tileCountX, int tileCountY)
+    {
+        List<Vector2Int> r = new List<Vector2Int>();
+
+
+        return r;
+    }
 }

@@ -22,13 +22,15 @@ public class GameBoard : MonoBehaviour
 
     [SerializeField] PlayerTurnGameState _playerTurnGameState;
     [SerializeField] AITurnGameState _AITurnGameState;
+    [SerializeField] SetupGameState _setupGameState;
        
     // LOGIC
     private GamePiece[,] _gamePieces;
     private GamePiece _currentlyDragging;
     private List<Vector2Int> _availableMoves = new List<Vector2Int>();
-    private List<GamePiece> deadPlayer = new List<GamePiece>();
-    private List<GamePiece> deadAI = new List<GamePiece>();
+    private List<Vector2Int> possibleKills;
+    private List<GamePiece> _deadPlayer = new List<GamePiece>();
+    private List<GamePiece> _deadAI = new List<GamePiece>();
     private const float TILE_COUNT_X = 5;
     private const float TILE_COUNT_Y = 5;
     private GameObject[,] _tiles;
@@ -39,6 +41,7 @@ public class GameBoard : MonoBehaviour
     private bool _AIsTurn = false;
     private PlayerTurnGameState PlayerTurnGameState;
     private AITurnGameState AITurnGameState;
+    private SetupGameState SetupGameState;
     private GamePiece[,] _AIgamepieces;
     private GamePiece _AIcurrentPiece;
     int playerTeam = 0;
@@ -48,6 +51,7 @@ public class GameBoard : MonoBehaviour
     {       
         PlayerTurnGameState = _playerTurnGameState.GetComponent<PlayerTurnGameState>();
         AITurnGameState = _AITurnGameState.GetComponent<AITurnGameState>();
+        SetupGameState = _setupGameState.GetComponent<SetupGameState>();
 
     }
     private void Update()
@@ -120,8 +124,12 @@ public class GameBoard : MonoBehaviour
                         _currentlyDragging = null;
                     }
                     else
-                    {
+                    {                        
+                        // check for kill
+                        _currentlyDragging.CheckForKill(ref _gamePieces, (int)TILE_COUNT_X, (int)TILE_COUNT_Y);
+
                         _currentlyDragging = null;
+                        // end state
                         PlayerTurnGameState.Exit();
                     }
 
@@ -156,15 +164,15 @@ public class GameBoard : MonoBehaviour
             }
 
                 // if currently dragging a piece, levitate
-                if (_currentlyDragging == true)
+            if (_currentlyDragging == true)
+            {
+                Plane horizontalPlane = new Plane(Vector3.up, Vector3.up * _yOffset);
+                float distance = 0.0f;
+                if (horizontalPlane.Raycast(ray, out distance))
                 {
-                    Plane horizontalPlane = new Plane(Vector3.up, Vector3.up * _yOffset);
-                    float distance = 0.0f;
-                    if (horizontalPlane.Raycast(ray, out distance))
-                    {
-                        _currentlyDragging.SetPosition(ray.GetPoint(distance) + Vector3.up * _draggOffset);
-                    }
+                    _currentlyDragging.SetPosition(ray.GetPoint(distance) + Vector3.up * _draggOffset);
                 }
+            }
             
         }
 
@@ -177,87 +185,64 @@ public class GameBoard : MonoBehaviour
             {
                 for (int y = 0; y < TILE_COUNT_Y; y++)
                 {
-                    if (_gamePieces[x, y] != null &&
-                        _gamePieces[x, y]._team == AITeam)
+                    if (_gamePieces[x, y] != null && _gamePieces[x, y]._team == AITeam)
                     {
-                        _AIcurrentPiece = _gamePieces[x, y];
-                        break;
+                        _AIcurrentPiece = _gamePieces[x, y];                                               
+                        
+                        break;                        
                     }
                 }
             }
-            //find a valid spot
-            List<Vector2Int> availableMoves = new List<Vector2Int>();
-
-            for (int x = 0; x < TILE_COUNT_X; x++)
-            {
-                for (int y = 0; y < TILE_COUNT_Y; y++)
-                {
-                    if (_gamePieces[x, y] != null &&
-                        _gamePieces[x, y]._team == AITeam)
-                    {
-                        _AIcurrentPiece = _gamePieces[x, y];
-                        break;
-                    }
-                }
-            }
-
-            availableMoves = _AIcurrentPiece.GetAvailableMoves(ref _gamePieces,
-                            (int)TILE_COUNT_X, (int)TILE_COUNT_Y);
-            // move to valid spot
-            int random = Random.Range(0, availableMoves.Count);
-            Vector2Int randomMove = availableMoves[random];
-            MoveTo(_AIcurrentPiece, randomMove.x, randomMove.y);
-            // check for kill
-            // change state            
-            AITurnGameState.Exit();
+            MoveAIpiece(_AIcurrentPiece);
+            _AIsTurn = false;            
         }
             
     } 
+
+    // AI movement
+    private void MoveAIpiece(GamePiece piece)
+    {        
+        //find a valid spot
+        List<Vector2Int> availableMoves = new List<Vector2Int>();
+
+        availableMoves = piece.GetAvailableMoves(ref _gamePieces,
+                        (int)TILE_COUNT_X, (int)TILE_COUNT_Y);
+        // move to valid spot
+        int random = Random.Range(0, availableMoves.Count);        
+        
+        Vector2Int randomMove = new Vector2Int(availableMoves[random].x, availableMoves[random].y);
+        int x = availableMoves[random].x;
+        int y = availableMoves[random].y;
+
+        //Vector2Int randomMove = availableMoves[random];
+
+        MoveTo(piece, x, y);        
+        piece.SetPosition(GetTileCenter(x, y), false);
+        // check for kill
+        // change state            
+        AITurnGameState.Exit();
+    }
+
     // build gameboard
     public void BuildGameBoard()
     {
         GenerateAllTiles(_tileSize, TILE_COUNT_X, TILE_COUNT_Y);
         SpawnAllPieces();
         PositionAllPieces();
+        SetupGameState.Exit();
     }
 
     // player's turn
     public void ActivatePlayersTurn()
-    {
-        Debug.Log("Activate Player");
+    {        
         _AIsTurn = false;
         _playersTurn = true;        
     }
 
     public void DeactivatePlayersTurn()
-    {
-        Debug.Log("Deactivate Player");
+    {        
         _playersTurn = false;
         _AIsTurn = true;
-    }
-
-    public void ActivateAIsTurn()
-    {
-
-    }
-
-    public void DectivateAIsTurn()
-    {
-
-    }
-
-    private void OnAIsTurn()
-    {
-        // pick a random AI piece
-        
-
-        // move AI piece
-        // check if there's a kill
-    }
-
-    private void CheckForKill()
-    {
-
     }
 
     // Generate the game board
@@ -349,7 +334,7 @@ public class GameBoard : MonoBehaviour
     }
 
     private void PositionSinglePiece(int x, int y, bool force = false)
-    {
+    {        
         _gamePieces[x, y]._currentX = x;
         _gamePieces[x, y]._currentY = y;
         _gamePieces[x, y].SetPosition(GetTileCenter(x, y), force);
@@ -392,7 +377,7 @@ public class GameBoard : MonoBehaviour
         return false;
     }
     private bool MoveTo(GamePiece currentPiece, int x, int y)
-    {
+    {        
         if(ContainsValidMove(ref _availableMoves, new Vector2(x, y)) == false)
         {
             return false;
