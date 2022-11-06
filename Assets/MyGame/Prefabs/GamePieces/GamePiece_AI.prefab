@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8255377790545285500}
   - component: {fileID: 8255377790545285491}
   - component: {fileID: 8255377790545285490}
-  - component: {fileID: 8255377790545285489}
+  - component: {fileID: -7869144167079336728}
   m_Layer: 0
   m_Name: GamePiece_AI
   m_TagString: Untagged
@@ -99,7 +99,7 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
---- !u!114 &8255377790545285489
+--- !u!114 &-7869144167079336728
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -108,10 +108,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8255377790545285495}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e156530b815a5c644a80fc20d89bc472, type: 3}
+  m_Script: {fileID: 11500000, guid: 2d0ffadc4f817824fa2ac20342772471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _team: 0
+  _team: 1
   _currentX: 0
   _currentY: 0
-  _type: 0
+  _type: 1

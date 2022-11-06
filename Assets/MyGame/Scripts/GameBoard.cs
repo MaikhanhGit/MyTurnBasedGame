@@ -41,21 +41,20 @@ public class GameBoard : MonoBehaviour
     private bool _AIsTurn = false;
     private PlayerTurnGameState PlayerTurnGameState;
     private AITurnGameState AITurnGameState;
-    private SetupGameState SetupGameState;
-    private GamePiece[,] _AIgamepieces;
+    private SetupGameState SetupGameState;    
     private GamePiece _AIcurrentPiece;
-    int playerTeam = 0;
-    int AITeam = 1;
+    int _playerTeam = 0;
+    int _AITeam = 1;
+    
 
     private void Awake()
     {       
         PlayerTurnGameState = _playerTurnGameState.GetComponent<PlayerTurnGameState>();
         AITurnGameState = _AITurnGameState.GetComponent<AITurnGameState>();
-        SetupGameState = _setupGameState.GetComponent<SetupGameState>();
-
+        SetupGameState = _setupGameState.GetComponent<SetupGameState>();               
     }
     private void Update()
-    {
+    {        
         if (_playersTurn == true)
         {
             if (_currentCamera == null)
@@ -101,12 +100,12 @@ public class GameBoard : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     if (_gamePieces[hitPosition.x, hitPosition.y] != null &&
-                        _gamePieces[hitPosition.x, hitPosition.y]._team == playerTeam)
+                        _gamePieces[hitPosition.x, hitPosition.y]._team == _playerTeam)
                     {
                         _currentlyDragging = _gamePieces[hitPosition.x, hitPosition.y];
 
                         // get a list of available positions, highlight
-                        _availableMoves = _currentlyDragging.GetAvailableMoves(ref _gamePieces,
+                        _availableMoves = _currentlyDragging.GetAvailableMoves(_gamePieces,
                             (int)TILE_COUNT_X, (int)TILE_COUNT_Y);
                         HighLightTiles();
                     }
@@ -126,15 +125,15 @@ public class GameBoard : MonoBehaviour
                     else
                     {                        
                         // check for kill
-                        _currentlyDragging.CheckForKill(ref _gamePieces, (int)TILE_COUNT_X, (int)TILE_COUNT_Y);
+                        _currentlyDragging.CheckForKill(_gamePieces, (int)TILE_COUNT_X, (int)TILE_COUNT_Y);
 
                         _currentlyDragging = null;
                         // end state
+                        RemoveHighLightTiles();
                         PlayerTurnGameState.Exit();
                     }
-
                     RemoveHighLightTiles();
-                    
+
                 }
             }
 
@@ -154,7 +153,7 @@ public class GameBoard : MonoBehaviour
                     _currentHover = -Vector2Int.one;
                 }
 
-                if (_currentlyDragging == true && Input.GetMouseButtonUp(0))
+                if (_currentlyDragging && Input.GetMouseButtonUp(0))
                 {
                     _currentlyDragging.SetPosition(GetTileCenter(_currentlyDragging._currentX, _currentlyDragging._currentY));
                     _currentlyDragging = null;
@@ -185,40 +184,41 @@ public class GameBoard : MonoBehaviour
             {
                 for (int y = 0; y < TILE_COUNT_Y; y++)
                 {
-                    if (_gamePieces[x, y] != null && _gamePieces[x, y]._team == AITeam)
+                    if (_gamePieces[x, y] != null && _gamePieces[x, y]._team == _AITeam)
                     {
-                        _AIcurrentPiece = _gamePieces[x, y];                                               
-                        
+                        _AIcurrentPiece = _gamePieces[x, y];                                                                      
                         break;                        
                     }
                 }
             }
             MoveAIpiece(_AIcurrentPiece);
             _AIsTurn = false;            
-        }
-            
+        }            
     } 
 
     // AI movement
     private void MoveAIpiece(GamePiece piece)
     {        
         //find a valid spot
-        List<Vector2Int> availableMoves = new List<Vector2Int>();
+        List<Vector2Int> availableMoves;
 
-        availableMoves = piece.GetAvailableMoves(ref _gamePieces,
+        availableMoves = piece.GetAvailableMoves(_gamePieces,
                         (int)TILE_COUNT_X, (int)TILE_COUNT_Y);
         // move to valid spot
         int random = Random.Range(0, availableMoves.Count);        
         
         Vector2Int randomMove = new Vector2Int(availableMoves[random].x, availableMoves[random].y);
-        int x = availableMoves[random].x;
-        int y = availableMoves[random].y;
+        int x = randomMove.x;
+        int y = randomMove.y;
 
-        //Vector2Int randomMove = availableMoves[random];
-
-        MoveTo(piece, x, y);        
-        piece.SetPosition(GetTileCenter(x, y), false);
-        // check for kill
+        //Vector2Int randomMove = availableMoves[random];        
+        MoveTo(piece, x, y);
+        //PositionSinglePiece(x, y);
+        //piece.SetPosition(GetTileCenter(x,y), false);
+            // check for kill
+        piece.CheckForKill(_gamePieces, (int)TILE_COUNT_X, (int)TILE_COUNT_Y);
+       
+        //_availableMoves.Clear();
         // change state            
         AITurnGameState.Exit();
     }
@@ -290,20 +290,20 @@ public class GameBoard : MonoBehaviour
         _gamePieces = new GamePiece[(int)TILE_COUNT_X, (int)TILE_COUNT_Y];               
 
         // player team
-        _gamePieces[0, 1] = SpawnSinglePiece(GamePieceType.PlayerPiece, playerTeam);
-        _gamePieces[4, 1] = SpawnSinglePiece(GamePieceType.PlayerPiece, playerTeam);
+        _gamePieces[0, 1] = SpawnSinglePiece(GamePieceType.PlayerPiece, _playerTeam);
+        _gamePieces[4, 1] = SpawnSinglePiece(GamePieceType.PlayerPiece, _playerTeam);
         for (int i = 0; i < TILE_COUNT_X; i++)
         {
-            _gamePieces[i, 0] = SpawnSinglePiece(GamePieceType.PlayerPiece, playerTeam);
+            _gamePieces[i, 0] = SpawnSinglePiece(GamePieceType.PlayerPiece, _playerTeam);
         }
         
         
         // AI team
-        _gamePieces[0, 3] = SpawnSinglePiece(GamePieceType.AIPiece, AITeam);
-        _gamePieces[4, 3] = SpawnSinglePiece(GamePieceType.AIPiece, AITeam);
+        _gamePieces[0, 3] = SpawnSinglePiece(GamePieceType.AIPiece, _AITeam);
+        _gamePieces[4, 3] = SpawnSinglePiece(GamePieceType.AIPiece, _AITeam);
         for (int i = 0; i < TILE_COUNT_X; i++)
         {
-            _gamePieces[i, 4] = SpawnSinglePiece(GamePieceType.AIPiece, AITeam);
+            _gamePieces[i, 4] = SpawnSinglePiece(GamePieceType.AIPiece, _AITeam);
         }
     }
 
@@ -343,6 +343,7 @@ public class GameBoard : MonoBehaviour
     private Vector3 GetTileCenter(int x, int y)
     {
         return new Vector3(x * _tileSize, _yOffset, y * _tileSize) - _bounds + new Vector3(_tileSize/2, 0, _tileSize/2);
+        
     }
 
     // Highlight Tiles
@@ -390,9 +391,12 @@ public class GameBoard : MonoBehaviour
             GamePiece otherGP = _gamePieces[x, y];
 
             // determine how to eliminate game pieces here
-            return false;
-        }        
-
+            if(currentPiece == otherGP)
+            {
+                return false;
+            }            
+        }
+        
         _gamePieces[x, y] = currentPiece;
         _gamePieces[previousPosition.x, previousPosition.y] = null;
 

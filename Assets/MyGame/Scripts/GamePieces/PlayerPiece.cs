@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerPiece : GamePiece
 {   
-    public override List<Vector2Int> GetAvailableMoves(ref GamePiece[,] board, int tileCountX, int tileCountY)
+    public override List<Vector2Int> GetAvailableMoves(GamePiece[,] board, int tileCountX, int tileCountY)
     {
         List<Vector2Int> r = new List<Vector2Int>();
         // Up        
@@ -82,7 +82,7 @@ public class PlayerPiece : GamePiece
         return r;
     }
        
-    public override List<Vector2Int> CheckForKill(ref GamePiece[,] board, int tileCountX, int tileCountY)
+    public override List<Vector2Int> CheckForKill(GamePiece[,] board, int tileCountX, int tileCountY)
     {
         List<Vector2Int> r = new List<Vector2Int>();
         Debug.Log("currentX: " + _currentX);
@@ -90,8 +90,9 @@ public class PlayerPiece : GamePiece
         /// Up        
         if ((_currentY + 2) < tileCountY)
         {
-            if ((board[_currentX, _currentY + 1]?._team != board[_currentX, _currentY]._team) &&
-                (board[_currentX, _currentY + 2]?._team == board[_currentX, _currentY]._team))
+            if (board[_currentX, _currentY + 1] != null && board[_currentX, _currentY + 2] != null &&
+                board[_currentX, _currentY + 1]._team != board[_currentX, _currentY]._team &&
+                board[_currentX, _currentY + 2]._team == board[_currentX, _currentY]._team)
             {
                 Destroy(board[_currentX, _currentY + 1]);
                 r.Add(new Vector2Int(_currentX, _currentY + 1));
@@ -179,8 +180,7 @@ public class PlayerPiece : GamePiece
             {
                 Destroy(board[_currentX - 1, _currentY - 1]);
                 r.Add(new Vector2Int(_currentX - 1, _currentY - 1));
-                Debug.Log("Killed 7");
-                Debug.Log("game piece: " + board[_currentX - 1, _currentY - 1]?._currentX);
+                Debug.Log("Killed 7");                
             }
         }       
 
