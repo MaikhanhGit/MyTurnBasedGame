@@ -971,6 +971,7 @@ GameObject:
   - component: {fileID: 373557457}
   - component: {fileID: 373557458}
   - component: {fileID: 373557459}
+  - component: {fileID: 373557460}
   m_Layer: 0
   m_Name: StateController
   m_TagString: Untagged
@@ -1033,7 +1034,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9d66a7ded647dd40a401f40df5d3d1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playTurnTextUI: {fileID: 1379503137}
+  _playerTurnTextUI: {fileID: 1379503137}
 --- !u!114 &373557459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1047,6 +1048,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pauseDuration: 1.5
+--- !u!114 &373557460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 373557454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1248b3b8ffb28224197ff0966297d4c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameBoard: {fileID: 536210155}
 --- !u!1 &432432459
 GameObject:
   m_ObjectHideFlags: 0

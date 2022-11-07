@@ -5,19 +5,19 @@ using TMPro;
 
 public class PlayerTurnGameState : TurnBaseGameState
 {
-    [SerializeField] TextMeshProUGUI _playTurnTextUI = null;
+    [SerializeField] TextMeshProUGUI _playerTurnTextUI = null;
 
     int _playerTurnCount = 0;
         
 
     public override void Enter()
     {        
-        _playTurnTextUI.gameObject.SetActive(true);
+        _playerTurnTextUI.gameObject.SetActive(true);
         // activate player's input
         StateMachine.GameBoardInput?.ActivatePlayersTurn();
 
         _playerTurnCount++;
-        _playTurnTextUI.text = "Player Turn: " + _playerTurnCount.ToString();
+        _playerTurnTextUI.text = "Player Turn: " + _playerTurnCount.ToString();
 
         // hook into events
         //StateMachine.PlayerInput.PressedConfirm += OnPressedConfirm;
@@ -31,7 +31,7 @@ public class PlayerTurnGameState : TurnBaseGameState
 
     public override void Exit()
     {
-        _playTurnTextUI.gameObject.SetActive(false);
+        _playerTurnTextUI.gameObject.SetActive(false);
         //StateMachine.PlayerInput.PressedConfirm -= OnPressedConfirm;
         // change to the AI turn state        
         StateMachine.ChangeState<AITurnGameState>();

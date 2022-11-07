@@ -16,7 +16,7 @@ public class GamePiece : MonoBehaviour
     public GamePieceType _type;
 
     private Vector3 _desiredPosition;
-    private Vector3 _desiredScale = new Vector3 (0.7f, 0.05f, 0.7f);
+    private Vector3 _desiredScale = new Vector3 (0.7f, 0.05f, 0.7f);    
 
     private void Update()
     {
@@ -104,8 +104,7 @@ public class GamePiece : MonoBehaviour
 
     public virtual void SetPosition(Vector3 position, bool force = false)
     {
-        _desiredPosition = position;
-       
+        _desiredPosition = position;                 
 
         if (force == true)
         {            
@@ -122,17 +121,24 @@ public class GamePiece : MonoBehaviour
         }
     }
 
-    public virtual List<Vector2Int> CheckForKill(GamePiece[,] board, int tileCountX, int tileCountY)
+    public virtual int CheckForKill(GamePiece[,] board, int tileCountX, int tileCountY, int team)
     {
-        List<Vector2Int> r = new List<Vector2Int>();        
+        int _killCount = 0;        
+        
         /// Up        
         if ((_currentY + 2) < tileCountY)
         {
-            if ((board[_currentX, _currentY + 1]?._team != _team) &&
-                (board[_currentX, _currentY + 2]?._team == _team))
+            GamePiece p1 = board[_currentX, _currentY + 1];
+            GamePiece p2 = board[_currentX, _currentY + 2];
+
+            if (p1 != null && p1._team != team &&
+                (p2 != null && p2._team == team))
             {
-                Destroy(board[_currentX, _currentY + 1]);
-                r.Add(new Vector2Int(_currentX, _currentY + 1));
+                _killCount++;
+                Destroy(p1);
+                p1 = null;
+
+                //r.Add(new Vector2Int(_currentX, _currentY + 1));
                 Debug.Log("Killed 1: ");
             }
         }
@@ -140,11 +146,16 @@ public class GamePiece : MonoBehaviour
         // down
         if ((_currentY - 2) >= 0)
         {
-            if ((board[_currentX, _currentY - 1]?._team != _team) &&
-                (board[_currentX, _currentY - 2]?._team == _team))
+            GamePiece p1 = board[_currentX, _currentY - 1];
+            GamePiece p2 = board[_currentX, _currentY - 2];
+
+            if (p1 != null && p1._team != team &&
+                p2 != null && p2._team == team)
             {
-                Destroy(board[_currentX, _currentY - 1]);
-                r.Add(new Vector2Int(_currentX, _currentY - 1));
+                _killCount++;
+                Destroy(p1);
+                p1 = null;
+                //r.Add(new Vector2Int(_currentX, _currentY - 1));
                 Debug.Log("Killed 2: ");
             }
         }
@@ -152,11 +163,16 @@ public class GamePiece : MonoBehaviour
         // right
         if ((_currentX + 2) < tileCountX)
         {
-            if ((board[_currentX + 1, _currentY]?._team != _team) &&
-                (board[_currentX + 2, _currentY]?._team == _team))
+            GamePiece p1 = board[_currentX + 1, _currentY];
+            GamePiece p2 = board[_currentX + 2, _currentY];
+
+            if (p1 != null && p1._team != team &&
+                p2 != null && p2._team == team)
             {
+                _killCount++;
                 Destroy(board[_currentX + 1, _currentY]);
-                r.Add(new Vector2Int(_currentX + 1, _currentY));
+                board[_currentX + 1, _currentY] = null;
+                //r.Add(new Vector2Int(_currentX + 1, _currentY));
                 Debug.Log("Killed 3: ");
             }
         }
@@ -164,11 +180,16 @@ public class GamePiece : MonoBehaviour
         // left
         if ((_currentX - 2) >= 0)
         {
-            if ((board[_currentX - 1, _currentY]?._team != _team) &&
-                (board[_currentX - 2, _currentY]?._team == _team))
+            GamePiece p1 = board[_currentX - 1, _currentY];
+            GamePiece p2 = board[_currentX - 2, _currentY];
+
+            if (p1 != null && p1._team != team &&
+                p2 != null && p2._team == team)
             {
-                Destroy(board[_currentX - 1, _currentY]);
-                r.Add(new Vector2Int(_currentX - 1, _currentY));
+                _killCount++;
+                Destroy(p1);
+                p1 = null;
+                //r.Add(new Vector2Int(_currentX - 1, _currentY));
                 Debug.Log("Killed 4: ");
             }
         }
@@ -176,11 +197,16 @@ public class GamePiece : MonoBehaviour
         // top right
         if ((_currentX + 2) < tileCountX && (_currentY + 2) < tileCountY)
         {
-            if ((board[_currentX + 1, _currentY + 1]?._team != _team) &&
-                (board[_currentX + 2, _currentY + 2]?._team == _team))
+            GamePiece p1 = board[_currentX + 1, _currentY + 1];
+            GamePiece p2 = board[_currentX + 2, _currentY + 2];
+
+            if (p1 != null && p1._team != team &&
+                p2 != null && p2._team == team)
             {
-                Destroy(board[_currentX + 1, _currentY + 1]);
-                r.Add(new Vector2Int(_currentX + 1, _currentY + 1));
+                _killCount++;
+                Destroy(p1);
+                p1 = null;
+                //r.Add(new Vector2Int(_currentX + 1, _currentY + 1));
                 Debug.Log("Killed 8: ");
             }
         }
@@ -188,11 +214,15 @@ public class GamePiece : MonoBehaviour
         // bottom right
         if ((_currentX + 2) < tileCountX && (_currentY - 2) >= 0)
         {
-            if ((board[_currentX + 1, _currentY - 1]?._team != _team) &&
-                (board[_currentX + 2, _currentY - 2]?._team == _team))
+            GamePiece p1 = board[_currentX + 1, _currentY - 1];
+            GamePiece p2 = board[_currentX + 2, _currentY - 2];
+            if (p1 != null && p1._team != team &&
+                p2 != null && p2._team == team)
             {
-                Destroy(board[_currentX + 1, _currentY - 1]);
-                r.Add(new Vector2Int(_currentX + 1, _currentY - 1));
+                _killCount++;
+                Destroy(p1);
+                p1 = null;
+                //r.Add(new Vector2Int(_currentX + 1, _currentY - 1));
                 Debug.Log("Killed 5: ");
             }
         }
@@ -200,11 +230,16 @@ public class GamePiece : MonoBehaviour
         // top left
         if ((_currentX - 2) >= 0 && (_currentY + 2) < tileCountY)
         {
-            if ((board[_currentX - 1, _currentY + 1]?._team != _team) &&
-                (board[_currentX - 2, _currentY + 2]?._team == _team))
+            GamePiece p1 = board[_currentX - 1, _currentY + 1];
+            GamePiece p2 = board[_currentX - 2, _currentY + 2];
+
+            if (p1 != null && p1._team != team &&
+                p2 != null && p2._team == team)
             {
-                Destroy(board[_currentX - 1, _currentY + 1]);
-                r.Add(new Vector2Int(_currentX - 1, _currentY + 1));
+                _killCount++;
+                Destroy(p1);
+                p1 = null;
+                //r.Add(new Vector2Int(_currentX - 1, _currentY + 1));
                 Debug.Log("Killed 6: ");
             }
         }
@@ -212,16 +247,21 @@ public class GamePiece : MonoBehaviour
         // bottom left
         if ((_currentX - 2) >= 0 && (_currentY - 2) >= 0)
         {
-            if ((board[_currentX - 1, _currentY - 1]?._team != _team) &&
-                (board[_currentX - 2, _currentY - 2]?._team == _team))
+            GamePiece p1 = board[_currentX - 1, _currentY - 1];
+            GamePiece p2 = board[_currentX - 2, _currentY - 2];
+
+            if (p1 != null && p1._team != team &&
+                p2 != null && p2._team == team)
             {
-                Destroy(board[_currentX - 1, _currentY - 1]);
-                r.Add(new Vector2Int(_currentX - 1, _currentY - 1));
+                _killCount++;
+                Destroy(p1);
+                p1 = null;
+                //r.Add(new Vector2Int(_currentX - 1, _currentY - 1));
                 Debug.Log("Killed 7");
             }
         }
 
-        return r;
+        return _killCount;
     }
 }
 
