@@ -8,7 +8,7 @@ public class AITurnGameState : TurnBaseGameState
     public static event Action AITurnBegan;
     public static event Action AITurnEnded;
 
-    [SerializeField] float _pauseDuration = 2f;
+    [SerializeField] float _pauseDuration = 3f;
 
     public override void Enter()
     {        

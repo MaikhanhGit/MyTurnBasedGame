@@ -39,6 +39,7 @@ public class GameBoard : MonoBehaviour
     private Vector3 _bounds;
     private bool _playersTurn = false;
     private bool _AIsTurn = false;
+    private bool _pickedApiece = false;
     private PlayerTurnGameState PlayerTurnGameState;
     private AITurnGameState AITurnGameState;
     private SetupGameState SetupGameState;    
@@ -174,64 +175,74 @@ public class GameBoard : MonoBehaviour
             // if AI's turn
         if (_AIsTurn == true)
         {
-            List<Vector2Int> availableMoves = new List<Vector2Int>();
-            // pick a random AI piece
-            for (int x = 0; x < TILE_COUNT_X; x++)
+            List<Vector2Int> availableMoves = new List<Vector2Int>();            
+
+            if (_pickedApiece == false)
             {
-                for (int y = 0; y < TILE_COUNT_Y; y++)
+                // pick a random AI piece
+                for (int x = 0; x < TILE_COUNT_X; x++)
                 {
-                    if (_gamePieces[x, y] != null && _gamePieces[x, y]._team == _AITeam)
+                    for (int y = 0; y < TILE_COUNT_Y; y++)
                     {
-                        // check if there's available moves for this piece                        
-                        availableMoves = _gamePieces[x, y].GetAvailableMoves(_gamePieces,
-                        (int)TILE_COUNT_X, (int)TILE_COUNT_Y);
-                        if (availableMoves != null)
+                        if (_gamePieces[x, y] != null && _gamePieces[x, y]._team == _AITeam)
                         {
-                            _AIcurrentPiece = _gamePieces[x, y];
-                            break;
-                        }                                          
+                            // check if there's available moves for this piece                        
+                            availableMoves = _gamePieces[x, y].GetAvailableMoves(_gamePieces,
+                            (int)TILE_COUNT_X, (int)TILE_COUNT_Y);
+                            if (availableMoves != null && availableMoves.Count > 0)
+                            {
+                                _AIcurrentPiece = _gamePieces[x, y];
+                                break;
+                            }
+                        }
                     }
                 }
-            }
 
-            if (availableMoves != null)
-            {
-                MoveAIpiece(_AIcurrentPiece, availableMoves);
-                _AIsTurn = false;
+                if (availableMoves != null && availableMoves.Count > 0)
+                {
+                    _pickedApiece = true;
+                    MoveAIpiece(_AIcurrentPiece, availableMoves);
+                    _AIsTurn = false;
+                }
+                else
+                {
+                    _AIsTurn = false;
+                    // Game End with Win
+                    Debug.Log("You've Won!");
+                    AITurnGameState.Exit();
+                }
             }
             
-            else
-            {
-                // Game End with Win
-                Debug.Log("You've Won!");
-                AITurnGameState.Exit();
-            }
         }            
     }    
 
     // AI movement
-    private void MoveAIpiece(GamePiece piece, List<Vector2Int> AV)
+    private void MoveAIpiece(GamePiece piece, List<Vector2Int> AMoves)
     {
         Vector2Int previousPosition = new Vector2Int(piece._currentX, piece._currentY);
+
         int killCount;
 
         //find a valid spot               
-        int random = Random.Range(0, AV.Count);
-        Debug.Log("random: " + random);
-        Vector2Int randomPosition = new Vector2Int(AV[random].x, AV[random].y);
+        Debug.Log(AMoves.Count);
+        int random = Random.Range(0, AMoves.Count);        
+        Vector2Int randomPosition = new Vector2Int(AMoves[random].x, AMoves[random].y);
+        Debug.Log("random: " + randomPosition);
         int x = randomPosition.x;
         int y = randomPosition.y;
         // move to valid spot
         _gamePieces[x, y] = piece;
         _gamePieces[previousPosition.x, previousPosition.y] = null;
         PositionSinglePiece(x, y);
-        AV.Clear();
+        AMoves.Clear();
         // check for kill
         killCount = _gamePieces[x, y].CheckForKill(_gamePieces, (int)TILE_COUNT_X, (int)TILE_COUNT_Y, _AITeam);   
         if(killCount == _playerPieceCount)
         {
             Debug.Log("You've Won!");
         }
+        _pickedApiece = false;
+        
         // change state            
         AITurnGameState.Exit();
     }
