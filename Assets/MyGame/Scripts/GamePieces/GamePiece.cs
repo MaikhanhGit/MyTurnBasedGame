@@ -10,13 +10,17 @@ public enum GamePieceType
 }
 public class GamePiece : MonoBehaviour
 {
+    [SerializeField] AudioClip _moveSFX;
+    [SerializeField] AudioClip _killedSFX;
+
     public int _team;
     public int _currentX;   
     public int _currentY;
     public GamePieceType _type;
 
     private Vector3 _desiredPosition;
-    private Vector3 _desiredScale = new Vector3 (0.7f, 0.05f, 0.7f);    
+    private Vector3 _desiredScale = new Vector3 (0.7f, 0.05f, 0.7f);
+    private bool _audioPlayed = false;
 
     private void Update()
     {
@@ -104,6 +108,7 @@ public class GamePiece : MonoBehaviour
 
     public virtual void SetPosition(Vector3 position, bool force = false)
     {
+        PlayMoveSFX();
         _desiredPosition = position;                 
 
         if (force == true)
@@ -134,10 +139,9 @@ public class GamePiece : MonoBehaviour
             if (p1 != null && p1._team != team &&
                 (p2 != null && p2._team == team))
             {
+                AudioHelper.PlayClip2D(_killedSFX, 1);
                 _killCount++;
-                Destroy(p1.gameObject);
-
-                Debug.Log(p1);
+                Destroy(p1.gameObject);                
                 p1 = null;                
             }
         }
@@ -151,6 +155,7 @@ public class GamePiece : MonoBehaviour
             if (p1 != null && p1._team != team &&
                 p2 != null && p2._team == team)
             {
+                AudioHelper.PlayClip2D(_killedSFX, 1);
                 _killCount++;
                 Destroy(p1.gameObject);
                 p1 = null;
@@ -167,6 +172,7 @@ public class GamePiece : MonoBehaviour
             if (p1 != null && p1._team != team &&
                 p2 != null && p2._team == team)
             {
+                AudioHelper.PlayClip2D(_killedSFX, 1);
                 _killCount++;
                 Destroy(p1.gameObject);
                 p1 = null;
@@ -183,6 +189,7 @@ public class GamePiece : MonoBehaviour
             if (p1 != null && p1._team != team &&
                 p2 != null && p2._team == team)
             {
+                AudioHelper.PlayClip2D(_killedSFX, 1);
                 _killCount++;
                 Destroy(p1.gameObject);
                 p1 = null;
@@ -199,6 +206,7 @@ public class GamePiece : MonoBehaviour
             if (p1 != null && p1._team != team &&
                 p2 != null && p2._team == team)
             {
+                AudioHelper.PlayClip2D(_killedSFX, 1);
                 _killCount++;
                 Destroy(p1.gameObject);
                 p1 = null;
@@ -214,6 +222,7 @@ public class GamePiece : MonoBehaviour
             if (p1 != null && p1._team != team &&
                 p2 != null && p2._team == team)
             {
+                AudioHelper.PlayClip2D(_killedSFX, 1);
                 _killCount++;
                 Destroy(p1.gameObject);
                 p1 = null;
@@ -230,6 +239,7 @@ public class GamePiece : MonoBehaviour
             if (p1 != null && p1._team != team &&
                 p2 != null && p2._team == team)
             {
+                AudioHelper.PlayClip2D(_killedSFX, 1);
                 _killCount++;
                 Destroy(p1.gameObject);
                 p1 = null;
@@ -246,14 +256,22 @@ public class GamePiece : MonoBehaviour
             if (p1 != null && p1._team != team &&
                 p2 != null && p2._team == team)
             {
+                AudioHelper.PlayClip2D(_killedSFX, 1);
                 _killCount++;
                 Destroy(p1.gameObject);
-                p1 = null;
-                
+                p1 = null;                
             }
         }
 
         return _killCount;
+    }
+
+    private void PlayMoveSFX()
+    {
+        if(_moveSFX != null)
+        {
+            AudioHelper.PlayClip2D(_moveSFX, 1);            
+        }
     }
 }
 

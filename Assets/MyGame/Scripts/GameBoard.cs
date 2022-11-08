@@ -19,7 +19,7 @@ public class GameBoard : MonoBehaviour
     [Header("Prefabs & Materials")]
     [SerializeField] private GameObject[] _prefabs;
     [SerializeField] private Material[] _teamMaterial;
-
+    [SerializeField] AudioClip _playerMoveSFX;
     [SerializeField] PlayerTurnGameState _playerTurnGameState;
     [SerializeField] AITurnGameState _AITurnGameState;
     [SerializeField] SetupGameState _setupGameState;
@@ -135,6 +135,7 @@ public class GameBoard : MonoBehaviour
                         _AIPieceCount -= killCount;
                         // end state
                         _currentPlayersTurn = true;
+                        _playersTurn = false;
                         PlayerTurnGameState.Exit();
                         
 
@@ -178,8 +179,7 @@ public class GameBoard : MonoBehaviour
                 {
                     _currentlyDragging.SetPosition(ray.GetPoint(distance) + Vector3.up * _draggOffset);
                 }
-            }
-
+            }            
         }
 
             // if AI's turn
@@ -359,7 +359,8 @@ public class GameBoard : MonoBehaviour
     }
 
     private void PositionSinglePiece(int x, int y, bool force = false)
-    {        
+    {
+        AudioHelper.PlayClip2D(_playerMoveSFX, 1);
         _gamePieces[x, y]._currentX = x;
         _gamePieces[x, y]._currentY = y;
         _gamePieces[x, y].SetPosition(GetTileCenter(x, y), force);
@@ -424,7 +425,7 @@ public class GameBoard : MonoBehaviour
         _gamePieces[previousPosition.x, previousPosition.y] = null;
 
         PositionSinglePiece(x, y);        
-        return true;
+        return true;        
     }
     private Vector2Int LookupTileIndex(GameObject hitInfo)
     {

@@ -111,6 +111,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d0ffadc4f817824fa2ac20342772471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _moveSFX: {fileID: 0}
+  _killedSFX: {fileID: 8300000, guid: 5b03b92936cd03d498ac4796992f2b2b, type: 3}
   _team: 0
   _currentX: 0
   _currentY: 0

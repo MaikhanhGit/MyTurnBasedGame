@@ -4,9 +4,7 @@ using UnityEngine;
 using System;
 
 public class InputController : MonoBehaviour
-{
-    
-
+{    
     public event Action PressedConfirm = delegate { };
     public event Action PressedCancel = delegate { };
     public event Action PressedLeft = delegate { };
