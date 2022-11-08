@@ -5,9 +5,9 @@ using UnityEngine;
 public class TurnBaseGameSM : StateMachine
 {
     [SerializeField] InputController _input;
-    [SerializeField] GameBoard _gameBoardInput;
+    [SerializeField] GameBoard _gameBoard;
     public InputController PlayerInput => _input;
-    public GameBoard GameBoardInput => _gameBoardInput;
+    public GameBoard Board => _gameBoard;
 
     private void Start()
     {

@@ -138,10 +138,7 @@ public class GamePiece : MonoBehaviour
                 Destroy(p1.gameObject);
 
                 Debug.Log(p1);
-                p1 = null;
-
-                //r.Add(new Vector2Int(_currentX, _currentY + 1));
-                Debug.Log("Killed 1: ");
+                p1 = null;                
             }
         }
 
@@ -157,8 +154,7 @@ public class GamePiece : MonoBehaviour
                 _killCount++;
                 Destroy(p1.gameObject);
                 p1 = null;
-                //r.Add(new Vector2Int(_currentX, _currentY - 1));
-                Debug.Log("Killed 2: ");
+                
             }
         }
 
@@ -173,9 +169,8 @@ public class GamePiece : MonoBehaviour
             {
                 _killCount++;
                 Destroy(p1.gameObject);
-                board[_currentX + 1, _currentY] = null;
-                //r.Add(new Vector2Int(_currentX + 1, _currentY));
-                Debug.Log("Killed 3: ");
+                p1 = null;
+                
             }
         }
 
@@ -191,8 +186,7 @@ public class GamePiece : MonoBehaviour
                 _killCount++;
                 Destroy(p1.gameObject);
                 p1 = null;
-                //r.Add(new Vector2Int(_currentX - 1, _currentY));
-                Debug.Log("Killed 4: ");
+                
             }
         }
 
@@ -208,8 +202,7 @@ public class GamePiece : MonoBehaviour
                 _killCount++;
                 Destroy(p1.gameObject);
                 p1 = null;
-                //r.Add(new Vector2Int(_currentX + 1, _currentY + 1));
-                Debug.Log("Killed 8: ");
+                
             }
         }
 
@@ -224,8 +217,7 @@ public class GamePiece : MonoBehaviour
                 _killCount++;
                 Destroy(p1.gameObject);
                 p1 = null;
-                //r.Add(new Vector2Int(_currentX + 1, _currentY - 1));
-                Debug.Log("Killed 5: ");
+                
             }
         }
 
@@ -241,8 +233,7 @@ public class GamePiece : MonoBehaviour
                 _killCount++;
                 Destroy(p1.gameObject);
                 p1 = null;
-                //r.Add(new Vector2Int(_currentX - 1, _currentY + 1));
-                Debug.Log("Killed 6: ");
+                
             }
         }
 
@@ -258,8 +249,7 @@ public class GamePiece : MonoBehaviour
                 _killCount++;
                 Destroy(p1.gameObject);
                 p1 = null;
-                //r.Add(new Vector2Int(_currentX - 1, _currentY - 1));
-                Debug.Log("Killed 7");
+                
             }
         }
 

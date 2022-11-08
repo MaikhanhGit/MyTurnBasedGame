@@ -14,7 +14,7 @@ public class PlayerTurnGameState : TurnBaseGameState
     {        
         _playerTurnTextUI.gameObject.SetActive(true);
         // activate player's input
-        StateMachine.GameBoardInput?.ActivatePlayersTurn();
+        StateMachine.Board?.ActivatePlayersTurn();
 
         _playerTurnCount++;
         _playerTurnTextUI.text = "Player Turn: " + _playerTurnCount.ToString();
@@ -33,8 +33,8 @@ public class PlayerTurnGameState : TurnBaseGameState
     {
         _playerTurnTextUI.gameObject.SetActive(false);
         //StateMachine.PlayerInput.PressedConfirm -= OnPressedConfirm;
-        // change to the AI turn state        
-        StateMachine.ChangeState<AITurnGameState>();
+        // change to the AI turn state
+        StateMachine.ChangeState<CheckGameEndGameState>();        
     }    
 
     void OnPressedConfirm()

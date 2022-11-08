@@ -12,7 +12,7 @@ public class SetupGameState : TurnBaseGameState
     public override void Enter()
     {
         // build gameboard        
-        StateMachine.GameBoardInput.BuildGameBoard();
+        StateMachine.Board.BuildGameBoard();
         _activated = false;
     }
 
