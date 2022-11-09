@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 
 public class InputController : MonoBehaviour
 {    
@@ -48,5 +49,10 @@ public class InputController : MonoBehaviour
         {
             PressedRight?.Invoke();
         }
+    }
+
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene(0);
     }
 }

@@ -41,8 +41,8 @@ public class CheckGameEndGameState : TurnBaseGameState
             Debug.Log("You've Won!");
             LoadWon();
             
-        }        
-        
+        }
+        Debug.Log("Player's count: " + _playerTotalCount);
         Exit();
         
     }

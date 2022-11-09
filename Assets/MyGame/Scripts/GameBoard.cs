@@ -132,10 +132,10 @@ public class GameBoard : MonoBehaviour
                         // check for kill
                         int killCount = _gamePieces[hitPosition.x, hitPosition.y].CheckForKill(_gamePieces,
                             (int)TILE_COUNT_X, (int)TILE_COUNT_Y, _playerTeam);
-                        _AIPieceCount -= killCount;
-                        // end state
+                        _AIPieceCount -= killCount;                        
                         _currentPlayersTurn = true;
                         _playersTurn = false;
+                        // end state
                         PlayerTurnGameState.Exit();
                         
 
@@ -243,7 +243,8 @@ public class GameBoard : MonoBehaviour
         // check for kill
         killCount = _gamePieces[x, y].CheckForKill(_gamePieces, (int)TILE_COUNT_X, (int)TILE_COUNT_Y, _AITeam);
         
-        _playerPieceCount -= killCount;           
+        _playerPieceCount -= killCount;
+        _currentPlayersTurn = false;
         // change state            
         AITurnGameState.Exit();
     }
@@ -360,7 +361,11 @@ public class GameBoard : MonoBehaviour
 
     private void PositionSinglePiece(int x, int y, bool force = false)
     {
-        AudioHelper.PlayClip2D(_playerMoveSFX, 1);
+        if(_playersTurn == true)
+        {
+            AudioHelper.PlayClip2D(_playerMoveSFX, 1);
+        }
+        
         _gamePieces[x, y]._currentX = x;
         _gamePieces[x, y]._currentY = y;
         _gamePieces[x, y].SetPosition(GetTileCenter(x, y), force);
