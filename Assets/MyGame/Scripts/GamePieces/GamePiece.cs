@@ -137,14 +137,13 @@ public class GamePiece : MonoBehaviour
             GamePiece p1 = board[_currentX, _currentY + 1];
             GamePiece p2 = board[_currentX, _currentY + 2];
 
-            if (p1 != null && p1._team != team &&
-                (p2 != null && p2._team == team))
+            _somethingKilled = KillOne(p1, p2, team);
+            if (_somethingKilled == true)
             {
-                AudioHelper.PlayClip2D(_killedSFX, 1);
+                Debug.Log("Kill 1");
                 _killCount++;
-                Destroy(p1.gameObject);               
-                p1 = null;                
             }
+            
         }
 
         // down
@@ -156,6 +155,7 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillOne(p1, p2, team);
             if (_somethingKilled == true)
             {
+                Debug.Log("Kill 2");
                 _killCount++;               
             }
         }        
@@ -169,6 +169,7 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillOne(p1, p2, team);
             if (_somethingKilled == true)
             {
+                Debug.Log("Kill 3");
                 _killCount++;                
             }
         }
@@ -182,6 +183,7 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillOne(p1, p2, team);
             if (_somethingKilled == true)
             {
+                Debug.Log("Kill 4");
                 _killCount++;                
             }
         }
@@ -195,6 +197,7 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillOne(p1, p2, team);
             if (_somethingKilled == true)
             {
+                Debug.Log("Kill 5");
                 _killCount++;               
             }
         }
@@ -208,6 +211,7 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillOne(p1, p2, team);
             if (_somethingKilled == true)
             {
+                Debug.Log("Kill 6");
                 _killCount++;
             }
         }
@@ -221,6 +225,7 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillOne(p1, p2, team);
             if (_somethingKilled == true)
             {
+                Debug.Log("Kill 7");
                 _killCount++;
             }
         }
@@ -234,6 +239,7 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillOne(p1, p2, team);
             if (_somethingKilled == true)
             {
+                Debug.Log("Kill 8");
                 _killCount++;
             }            
         }
@@ -247,6 +253,7 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillTwo(p1, p2, team);
             if (_somethingKilled == true)
             {
+                Debug.Log("Kill 9");
                 _killCount += 2;
             }
         }
@@ -260,6 +267,7 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillTwo(p1, p2, team);
             if (_somethingKilled == true)
             {
+                Debug.Log("Kill 10");
                 _killCount += 2;
             }
         }
@@ -274,6 +282,7 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillTwo(p1, p2, team);
             if (_somethingKilled == true)
             {
+                Debug.Log("Kill 11");
                 _killCount += 2;
             }
         }
@@ -287,6 +296,7 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillTwo(p1, p2, team);
             if (_somethingKilled == true)
             {
+                Debug.Log("Kill 12");
                 _killCount += 2;
             }
         }

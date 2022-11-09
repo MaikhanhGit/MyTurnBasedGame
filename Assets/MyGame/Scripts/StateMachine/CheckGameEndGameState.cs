@@ -30,19 +30,20 @@ public class CheckGameEndGameState : TurnBaseGameState
             LoadTie();
         }
 
-        if(_playerTotalCount == 0)
+        if(_playerTotalCount <= 0)
         {
             Debug.Log("Game Over");
             LoadLose();
         }
 
-        if(_AITotalCount == 0 || _won == true)
+        if(_AITotalCount <= 0 || _won == true)
         {
             Debug.Log("You've Won!");
             LoadWon();
             
         }
         Debug.Log("Player's count: " + _playerTotalCount);
+        Debug.Log("AI's count: " + _AITotalCount);
         Exit();
         
     }
