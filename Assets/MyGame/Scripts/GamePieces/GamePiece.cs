@@ -129,8 +129,8 @@ public class GamePiece : MonoBehaviour
 
     public virtual int CheckForKill(GamePiece[,] board, int tileCountX, int tileCountY, int team)
     {
-        int _killCount = 0;        
-        
+        int _killCount = 0;
+
         /// Up        
         if ((_currentY + 2) < tileCountY)
         {
@@ -143,7 +143,7 @@ public class GamePiece : MonoBehaviour
                 Debug.Log("Kill 1");
                 _killCount++;
             }
-            
+
         }
 
         // down
@@ -156,9 +156,9 @@ public class GamePiece : MonoBehaviour
             if (_somethingKilled == true)
             {
                 Debug.Log("Kill 2");
-                _killCount++;               
+                _killCount++;
             }
-        }        
+        }
 
         // right
         if ((_currentX + 2) < tileCountX)
@@ -170,7 +170,7 @@ public class GamePiece : MonoBehaviour
             if (_somethingKilled == true)
             {
                 Debug.Log("Kill 3");
-                _killCount++;                
+                _killCount++;
             }
         }
 
@@ -184,7 +184,7 @@ public class GamePiece : MonoBehaviour
             if (_somethingKilled == true)
             {
                 Debug.Log("Kill 4");
-                _killCount++;                
+                _killCount++;
             }
         }
 
@@ -198,7 +198,7 @@ public class GamePiece : MonoBehaviour
             if (_somethingKilled == true)
             {
                 Debug.Log("Kill 5");
-                _killCount++;               
+                _killCount++;
             }
         }
 
@@ -241,7 +241,7 @@ public class GamePiece : MonoBehaviour
             {
                 Debug.Log("Kill 8");
                 _killCount++;
-            }            
+            }
         }
 
         // up & down
@@ -255,6 +255,93 @@ public class GamePiece : MonoBehaviour
             {
                 Debug.Log("Kill 9");
                 _killCount += 2;
+            }
+        }
+        // up & down Repeated kill count FIX
+        if ((_currentY + 1) < tileCountY && (_currentY - 1) >= 0)
+        {
+            GamePiece p1 = board[_currentX, _currentY + 1];
+            GamePiece p2 = board[_currentX, _currentY - 1];
+
+            // top 2 down 1
+            if ((_currentY + 2) < tileCountY)
+            {                
+                GamePiece p3 = board[_currentX, _currentY + 2];
+
+                _somethingKilled = KillOnlyOne(p1, p2, p3, team);
+                if (_somethingKilled == true)
+                {
+                    // kill 2 minus 1 double count
+                    _killCount -= 1;
+                }
+            }
+            // top 1 down 2
+            if ((_currentY - 2) >= 0)
+            {
+                GamePiece p3 = board[_currentX, _currentY - 2];
+
+                _somethingKilled = KillOnlyOne(p1, p2, p3, team);
+                if (_somethingKilled == true)
+                {
+                    // kill 2 minus 1 double count
+                    _killCount -= 1;
+                }
+            }
+            // top 2 down 2
+            if ((_currentY + 2) < tileCountY && (_currentY - 2) >= 0)
+            {
+                GamePiece p3 = board[_currentX, _currentY + 2];
+                GamePiece p4 = board[_currentX, _currentY - 2];
+
+                _somethingKilled = KillNone(p1, p2, p3, p4, team);
+                if (_somethingKilled == true)
+                {
+                    // kill 2 minus 2 double counts
+                    _killCount -= 2;
+                }
+            }
+        }
+        // sides Repeated kill count FIX
+        if ((_currentX + 1) < tileCountX && (_currentX - 1) >= 0)
+        {
+            GamePiece p1 = board[_currentX + 1, _currentY];
+            GamePiece p2 = board[_currentX - 1, _currentY];
+            // right 2 left 1
+            if ((_currentX + 2) < tileCountX)
+            {                
+                GamePiece p3 = board[_currentX + 2, _currentY];
+
+                _somethingKilled = KillOnlyOne(p1, p2, p3, team);
+                if (_somethingKilled == true)
+                {
+                    // kill 2 minus 1 double count
+                    _killCount -= 1;
+                }
+            }
+            // right 1 left 2
+            if ((_currentX - 2) >= 0)
+            {
+                GamePiece p3 = board[_currentX - 2, _currentY];
+
+                _somethingKilled = KillOnlyOne(p1, p2, p3, team);
+                if (_somethingKilled == true)
+                {
+                    // kill 2 minus 1 double count
+                    _killCount -= 1;
+                }
+            }
+            // right 2 left 2
+            if ((_currentX + 2) < tileCountX && (_currentX - 2) >= 0)
+            {
+                GamePiece p3 = board[_currentX + 2, _currentY];
+                GamePiece p4 = board[_currentX - 2, _currentY];
+
+                _somethingKilled = KillNone(p1, p2, p3, p4, team);
+                if (_somethingKilled == true)
+                {
+                    // kill 2 minus 2 double counts
+                    _killCount -= 2;
+                }
             }
         }
 
@@ -286,9 +373,58 @@ public class GamePiece : MonoBehaviour
                 _killCount += 2;
             }
         }
-        // left diagonal
+
+        // right diagonal Repeated kill count FIX
         if ((_currentX + 1) < tileCountX && (_currentX - 1) >= 0 &&
             (_currentY + 1) < tileCountY && (_currentY - 1) >= 0)
+        {
+            GamePiece p1 = board[_currentX + 1, _currentY + 1];
+            GamePiece p2 = board[_currentX - 1, _currentY - 1];
+
+            // top 2 down 1
+            if ((_currentX + 2) < tileCountX && (_currentY + 2) < tileCountY)
+            {                
+                GamePiece p3 = board[_currentX + 2, _currentY + 2];
+
+                _somethingKilled = KillOnlyOne(p1, p2, p3, team);
+                if (_somethingKilled == true)
+                {
+                    // kill 2 minus 1 double count
+                    _killCount -= 1;
+                }
+            }
+            // top 1 down 2
+            if ((_currentX - 2) >= 0 && (_currentY - 2) >= 0)
+            {               
+                GamePiece p3 = board[_currentX - 2, _currentY - 2];
+
+                _somethingKilled = KillOnlyOne(p1, p2, p3, team);
+                if (_somethingKilled == true)
+                {
+                    // kill 2 minus 1 double count
+                    _killCount -= 1;
+                }
+            }
+
+            // top 2 down 2
+            if ((_currentX + 2) < tileCountX && (_currentY + 2) < tileCountY &&
+                (_currentX - 2) >= 0 && (_currentY - 2) >= 0)
+            {                
+                GamePiece p3 = board[_currentX + 2, _currentY + 2];
+                GamePiece p4 = board[_currentX + 2, _currentY + 2];
+
+                _somethingKilled = KillNone(p1, p2, p3, p4, team);
+                if (_somethingKilled == true)
+                {
+                    // kill 2 minus 2 double counts
+                    _killCount -= 2;
+                }
+            }
+        }
+
+        // left diagonal
+        if ((_currentX + 1) < tileCountX && (_currentX - 1) >= 0 &&
+        (_currentY + 1) < tileCountY && (_currentY - 1) >= 0)
         {
             GamePiece p1 = board[_currentX + 1, _currentY - 1];
             GamePiece p2 = board[_currentX - 1, _currentY + 1];
@@ -300,16 +436,64 @@ public class GamePiece : MonoBehaviour
                 _killCount += 2;
             }
         }
-        
-        return _killCount;
-    }
 
+        // left diagonal Repeated kill count FIX
+        if ((_currentX + 1) < tileCountX && (_currentX - 1) >= 0 &&
+            (_currentY + 1) < tileCountY && (_currentY - 1) >= 0)
+        {
+            GamePiece p1 = board[_currentX + 1, _currentY - 1];
+            GamePiece p2 = board[_currentX - 1, _currentY + 1];
+
+            // top 2 down 1
+            if ((_currentX - 2) >= 0 && (_currentY + 2) < tileCountY)
+            {
+                GamePiece p3 = board[_currentX - 2, _currentY + 2];
+
+                _somethingKilled = KillOnlyOne(p1, p2, p3, team);
+                if (_somethingKilled == true)
+                {
+                    // kill 2 minus 1 double count
+                    _killCount -= 1;
+                }
+            }
+            // top 1 down 2
+            if ((_currentX + 2) < tileCountX && (_currentY - 2) >= 0)
+            {
+                GamePiece p3 = board[_currentX + 2, _currentY - 2];
+
+                _somethingKilled = KillOnlyOne(p1, p2, p3, team);
+                if (_somethingKilled == true)
+                {
+                    // kill 2 minus 1 double count
+                    _killCount -= 1;
+                }
+            }
+
+            // top 2 down 2
+            if ((_currentX + 2) < tileCountX && (_currentY + 2) < tileCountY &&
+                (_currentX - 2) >= 0 && (_currentY - 2) >= 0)
+            {
+                GamePiece p3 = board[_currentX - 2, _currentY + 2];
+                GamePiece p4 = board[_currentX + 2, _currentY - 2];
+
+                _somethingKilled = KillNone(p1, p2, p3, p4, team);
+                if (_somethingKilled == true)
+                {
+                    // kill 2 minus 2 double counts
+                    _killCount -= 2;
+                }
+            }
+        }
+
+        return _killCount;
+
+    }
     private bool KillOne(GamePiece p1, GamePiece p2, int team)
     {
         if (p1 != null && p1._team != team &&
                 p2 != null && p2._team == team)
         {
-            AudioHelper.PlayClip2D(_killedSFX, 1);           
+            AudioHelper.PlayClip2D(_killedSFX, 1);
             Destroy(p1.gameObject);
             p1 = null;
             _somethingKilled = true;
@@ -336,12 +520,54 @@ public class GamePiece : MonoBehaviour
         return _somethingKilled;
     }
 
+    private bool KillOnlyOne(GamePiece p1, GamePiece p2, GamePiece p3, int team)
+    {
+        if (p1 & p2 & p3 != null &&
+            p1._team != team &&
+            p2._team != team &&
+            p3._team == _team)
+        {
+            EliminateTwo(p1, p2);
+            _somethingKilled = true;
+            return _somethingKilled;
+        }
+        _somethingKilled = false;
+        return _somethingKilled;
+    }
+
+    private bool KillNone(GamePiece p1, GamePiece p2, GamePiece p3, GamePiece p4, int team)
+    {
+        if (p1 & p2 & p3 & p4 != null &&
+            p1._team != team &&
+            p2._team != team &&
+            p3._team == _team &&
+            p4._team == _team)
+        {
+            EliminateTwo(p1, p2);
+            _somethingKilled = true;
+            return _somethingKilled;
+        }
+        _somethingKilled = false;
+        return _somethingKilled;
+    }
+
+    private void EliminateTwo(GamePiece p1, GamePiece p2)
+    {
+        AudioHelper.PlayClip2D(_killedSFX, 1);
+        Destroy(p1.gameObject);
+        p1 = null;
+        Destroy(p2.gameObject);
+        p2 = null;
+    }
+
     private void PlayMoveSFX()
     {
-        if(_moveSFX != null)
+        if (_moveSFX != null)
         {
-            AudioHelper.PlayClip2D(_moveSFX, 1);            
+            AudioHelper.PlayClip2D(_moveSFX, 1);
         }
     }
+
+
 }
 
