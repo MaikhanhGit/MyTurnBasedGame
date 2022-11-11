@@ -12,6 +12,7 @@ public class GamePiece : MonoBehaviour
 {
     [SerializeField] AudioClip _moveSFX;
     [SerializeField] AudioClip _killedSFX;
+    [SerializeField] ParticleSystem _killedFX;
 
     public int _team;
     public int _currentX;   
@@ -22,6 +23,7 @@ public class GamePiece : MonoBehaviour
     private Vector3 _desiredScale = new Vector3 (0.7f, 0.05f, 0.7f);
     private bool _audioPlayed = false;
     private bool _somethingKilled = false;
+    private ParticleSystem _killedVisual;
 
     private void Update()
     {
@@ -494,6 +496,8 @@ public class GamePiece : MonoBehaviour
                 p2 != null && p2._team == team)
         {
             AudioHelper.PlayClip2D(_killedSFX, 1);
+            PlayFeedback(p1);            
+
             Destroy(p1.gameObject);
             p1 = null;
             _somethingKilled = true;
@@ -509,6 +513,9 @@ public class GamePiece : MonoBehaviour
                 p2 != null && p2._team != team)
         {
             AudioHelper.PlayClip2D(_killedSFX, 1);
+            PlayFeedback(p1);
+            PlayFeedback(p2);
+
             Destroy(p1.gameObject);
             p1 = null;
             Destroy(p2.gameObject);
@@ -554,8 +561,12 @@ public class GamePiece : MonoBehaviour
     private void EliminateTwo(GamePiece p1, GamePiece p2)
     {
         AudioHelper.PlayClip2D(_killedSFX, 1);
+        PlayFeedback(p1);
+        PlayFeedback(p2);
+
         Destroy(p1.gameObject);
         p1 = null;
+        
         Destroy(p2.gameObject);
         p2 = null;
     }
@@ -566,8 +577,13 @@ public class GamePiece : MonoBehaviour
         {
             AudioHelper.PlayClip2D(_moveSFX, 1);
         }
-    }
+    }  
 
+    private void PlayFeedback (GamePiece p)
+    {        
+        _killedVisual = Instantiate(_killedFX, p.transform.position, Quaternion.identity);
+        _killedVisual.Play();        
+    }
 
 }
 

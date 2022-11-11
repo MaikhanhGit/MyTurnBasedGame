@@ -113,6 +113,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSFX: {fileID: 8300000, guid: b94a2947b40d0d04bbe40f33cbb2588b, type: 3}
   _killedSFX: {fileID: 8300000, guid: 82a91fcdcaee6b24c8489d0cb6011f03, type: 3}
+  _killedFX: {fileID: 198247871303120836, guid: 8f616ec54e68fe544a289ccd1f6fdb9d,
+    type: 3}
   _team: 1
   _currentX: 0
   _currentY: 0

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class CheckGameEndGameState : TurnBaseGameState
-{    
+{
     private int _playerTotalCount = 7;
     private int _AITotalCount = 7;
     private bool _playersTurn = false;

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using TMPro;
 
 public class GameBoard : MonoBehaviour
 {
@@ -14,7 +15,9 @@ public class GameBoard : MonoBehaviour
     [SerializeField] private float _yOffset = 0.2f;
     [SerializeField] private Vector3 _boardCenter = Vector3.zero;
     [SerializeField] private float _draggOffset = 1;
-    
+    [SerializeField] TextMeshProUGUI _playerRemainingCountText;
+    [SerializeField] TextMeshProUGUI _AIRemainingCountText;
+
 
     [Header("Prefabs & Materials")]
     [SerializeField] private GameObject[] _prefabs;
@@ -23,8 +26,9 @@ public class GameBoard : MonoBehaviour
     [SerializeField] PlayerTurnGameState _playerTurnGameState;
     [SerializeField] AITurnGameState _AITurnGameState;
     [SerializeField] SetupGameState _setupGameState;
-    [SerializeField] CheckGameEndGameState _checkGameEndState;    
-       
+    [SerializeField] CheckGameEndGameState _checkGameEndState;
+
+    
     // LOGIC
     private GamePiece[,] _gamePieces;
     private GamePiece _currentlyDragging;
@@ -132,7 +136,8 @@ public class GameBoard : MonoBehaviour
                         // check for kill
                         int killCount = _gamePieces[hitPosition.x, hitPosition.y].CheckForKill(_gamePieces,
                             (int)TILE_COUNT_X, (int)TILE_COUNT_Y, _playerTeam);
-                        _AIPieceCount -= killCount;                        
+                        _AIPieceCount -= killCount;
+                        _AIRemainingCountText.text = "Opponent's Remaining Pieces: " + _AIPieceCount.ToString();
                         _currentPlayersTurn = true;
                         _playersTurn = false;
                         // end state
@@ -244,6 +249,7 @@ public class GameBoard : MonoBehaviour
         killCount = _gamePieces[x, y].CheckForKill(_gamePieces, (int)TILE_COUNT_X, (int)TILE_COUNT_Y, _AITeam);
         
         _playerPieceCount -= killCount;
+        _playerRemainingCountText.text = "Player's Remaining Pieces: " + _playerPieceCount.ToString();
         _currentPlayersTurn = false;
         // change state            
         AITurnGameState.Exit();

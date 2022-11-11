@@ -6,6 +6,7 @@ public class TurnBaseGameSM : StateMachine
 {
     [SerializeField] InputController _input;
     [SerializeField] GameBoard _gameBoard;
+    
     public InputController PlayerInput => _input;
     public GameBoard Board => _gameBoard;
 

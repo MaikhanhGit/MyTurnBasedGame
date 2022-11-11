@@ -17,7 +17,7 @@ public class PlayerTurnGameState : TurnBaseGameState
         StateMachine.Board?.ActivatePlayersTurn();
 
         _playerTurnCount++;
-        _playerTurnTextUI.text = "Player Turn: " + _playerTurnCount.ToString();
+        _playerTurnTextUI.text = " Your Turn #: " + _playerTurnCount.ToString();
 
         // hook into events
         //StateMachine.PlayerInput.PressedConfirm += OnPressedConfirm;
