@@ -9,11 +9,13 @@ public class MainMenu : MonoBehaviour
     [SerializeField] float _startGameDelay = .3f;
    public void StartGame()
     {
+        Time.timeScale = 1f;
         StartCoroutine(StartGameDelay(_startGameDelay));
     }
 
     public void LoadMainMenu()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(0);
     }
 

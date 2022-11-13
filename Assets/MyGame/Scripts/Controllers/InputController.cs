@@ -5,14 +5,24 @@ using System;
 using UnityEngine.SceneManagement;
 
 public class InputController : MonoBehaviour
-{    
+{
+    [SerializeField] GameObject _pauseMenu;
+
     public event Action PressedConfirm = delegate { };
     public event Action PressedCancel = delegate { };
     public event Action PressedLeft = delegate { };
     public event Action PressedRight = delegate { };
+
+    private bool _isPaused = false;
         
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Time.timeScale = 0f;
+            _pauseMenu.SetActive(true);
+        }
+
         DetectConfirm();
         DetectCancel();
         DetectLeft();
@@ -55,4 +65,5 @@ public class InputController : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+   
 }

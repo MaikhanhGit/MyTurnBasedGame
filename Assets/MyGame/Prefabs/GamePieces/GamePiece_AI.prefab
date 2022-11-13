@@ -45,15 +45,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d0ffadc4f817824fa2ac20342772471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSFX: {fileID: 8300000, guid: b94a2947b40d0d04bbe40f33cbb2588b, type: 3}
-  _killedSFX: {fileID: 8300000, guid: 82a91fcdcaee6b24c8489d0cb6011f03, type: 3}
-  _killedFX: {fileID: 19800000, guid: 1ddfc06af0f94704fbe00321e9f64364, type: 3}
+  _moveSFX: {fileID: 0}
+  _killedSFX: {fileID: 8300000, guid: 5b03b92936cd03d498ac4796992f2b2b, type: 3}
+  _killedFX: {fileID: 19800000, guid: b8ad56b28a6aaf147b1b3c7499274392, type: 3}
   _happyAnimation: {fileID: 1093220329021441504}
   _happyAnimationDuration: 2
-  _team: 1
+  _team: 0
   _currentX: 0
   _currentY: 0
-  _type: 1
+  _type: 0
 --- !u!1001 &1043075369426879050
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -95,7 +95,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4906828391645816, guid: 38efdaadbfe1d624bbee439cb02e7661, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4906828391645816, guid: 38efdaadbfe1d624bbee439cb02e7661, type: 3}
       propertyPath: m_LocalRotation.x
@@ -103,7 +103,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4906828391645816, guid: 38efdaadbfe1d624bbee439cb02e7661, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4906828391645816, guid: 38efdaadbfe1d624bbee439cb02e7661, type: 3}
       propertyPath: m_LocalRotation.z
@@ -115,7 +115,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4906828391645816, guid: 38efdaadbfe1d624bbee439cb02e7661, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4906828391645816, guid: 38efdaadbfe1d624bbee439cb02e7661, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z

@@ -21,7 +21,7 @@ public class GameBoard : MonoBehaviour
 
     [Header("Prefabs & Materials")]
     [SerializeField] private GameObject[] _prefabs;
-    [SerializeField] private Material[] _teamMaterial;
+   // [SerializeField] private Material[] _teamMaterial;
     [SerializeField] AudioClip _playerMoveSFX;
     [SerializeField] PlayerTurnGameState _playerTurnGameState;
     [SerializeField] AITurnGameState _AITurnGameState;
