@@ -24,26 +24,22 @@ public class CheckGameEndGameState : TurnBaseGameState
     public override void Tick()
     {
         if(_playerTotalCount == 1 && _AITotalCount == 1)
-        {
-            Debug.Log("Game End with a Tie");
+        {            
             // open scene
             LoadTie();
         }
 
         if(_playerTotalCount <= 0)
         {
-            Debug.Log("Game Over");
             LoadLose();
         }
 
         if(_AITotalCount <= 0 || _won == true)
         {
-            Debug.Log("You've Won!");
             LoadWon();
             
         }
-        Debug.Log("Player's count: " + _playerTotalCount);
-        Debug.Log("AI's count: " + _AITotalCount);
+        
         Exit();
         
     }

@@ -136,7 +136,13 @@ public class GameBoard : MonoBehaviour
                         // check for kill
                         int killCount = _gamePieces[hitPosition.x, hitPosition.y].CheckForKill(_gamePieces,
                             (int)TILE_COUNT_X, (int)TILE_COUNT_Y, _playerTeam);
+
                         _AIPieceCount -= killCount;
+                        if(_AIPieceCount <= 3)
+                        {
+                            _AIRemainingCountText.color = Color.red;
+                        }
+                        
                         _AIRemainingCountText.text = "Opponent's Remaining Pieces: " + _AIPieceCount.ToString();
                         _currentPlayersTurn = true;
                         _playersTurn = false;
@@ -249,11 +255,18 @@ public class GameBoard : MonoBehaviour
         killCount = _gamePieces[x, y].CheckForKill(_gamePieces, (int)TILE_COUNT_X, (int)TILE_COUNT_Y, _AITeam);
         
         _playerPieceCount -= killCount;
+
+        if(_playerPieceCount <= 3)
+        {
+            _playerRemainingCountText.color = Color.red;
+        }
+        
         _playerRemainingCountText.text = "Player's Remaining Pieces: " + _playerPieceCount.ToString();
         _currentPlayersTurn = false;
         // change state            
         AITurnGameState.Exit();
     }
+    
 
     // build gameboard
     public void BuildGameBoard()
@@ -345,7 +358,7 @@ public class GameBoard : MonoBehaviour
 
         piece._type = type;
         piece._team = team;
-        piece.GetComponent<MeshRenderer>().material = _teamMaterial[team];
+        //piece.GetComponent<MeshRenderer>().material = _teamMaterial[team];
 
         return piece;
     }
@@ -466,4 +479,11 @@ public class GameBoard : MonoBehaviour
 
         return killCount;
     }
+
+    // flashing text
+    private void FlashingText()
+    {
+
+    }
+   
 }

@@ -13,7 +13,8 @@ public class GamePiece : MonoBehaviour
     [SerializeField] AudioClip _moveSFX;
     [SerializeField] AudioClip _killedSFX;
     [SerializeField] ParticleSystem _killedFX;
-
+    [SerializeField] Animator _happyAnimation;
+    [SerializeField] float _happyAnimationDuration = 2;
     public int _team;
     public int _currentX;   
     public int _currentY;
@@ -24,11 +25,17 @@ public class GamePiece : MonoBehaviour
     private bool _audioPlayed = false;
     private bool _somethingKilled = false;
     private ParticleSystem _killedVisual;
+    private Animator _isHappyAnimation;
+
+    private void Awake()
+    {
+        _isHappyAnimation = _happyAnimation.GetComponent<Animator>();
+    }
 
     private void Update()
     {
         transform.position = Vector3.Lerp(transform.position, _desiredPosition, Time.deltaTime * 10);
-        transform.localScale = Vector3.Lerp(transform.localScale, _desiredScale, Time.deltaTime * 10);        
+        //transform.localScale = Vector3.Lerp(transform.localScale, _desiredScale, Time.deltaTime * 10);        
     }
 
     public virtual List<Vector2Int> GetAvailableMoves(GamePiece[,] board, int tileCountX, int tileCountY)
@@ -142,7 +149,6 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillOne(p1, p2, team);
             if (_somethingKilled == true)
             {
-                Debug.Log("Kill 1");
                 _killCount++;
             }
 
@@ -157,7 +163,6 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillOne(p1, p2, team);
             if (_somethingKilled == true)
             {
-                Debug.Log("Kill 2");
                 _killCount++;
             }
         }
@@ -171,7 +176,6 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillOne(p1, p2, team);
             if (_somethingKilled == true)
             {
-                Debug.Log("Kill 3");
                 _killCount++;
             }
         }
@@ -185,7 +189,6 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillOne(p1, p2, team);
             if (_somethingKilled == true)
             {
-                Debug.Log("Kill 4");
                 _killCount++;
             }
         }
@@ -199,7 +202,6 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillOne(p1, p2, team);
             if (_somethingKilled == true)
             {
-                Debug.Log("Kill 5");
                 _killCount++;
             }
         }
@@ -213,7 +215,6 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillOne(p1, p2, team);
             if (_somethingKilled == true)
             {
-                Debug.Log("Kill 6");
                 _killCount++;
             }
         }
@@ -227,7 +228,6 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillOne(p1, p2, team);
             if (_somethingKilled == true)
             {
-                Debug.Log("Kill 7");
                 _killCount++;
             }
         }
@@ -241,7 +241,6 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillOne(p1, p2, team);
             if (_somethingKilled == true)
             {
-                Debug.Log("Kill 8");
                 _killCount++;
             }
         }
@@ -255,7 +254,6 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillTwo(p1, p2, team);
             if (_somethingKilled == true)
             {
-                Debug.Log("Kill 9");
                 _killCount += 2;
             }
         }
@@ -356,7 +354,6 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillTwo(p1, p2, team);
             if (_somethingKilled == true)
             {
-                Debug.Log("Kill 10");
                 _killCount += 2;
             }
         }
@@ -371,7 +368,6 @@ public class GamePiece : MonoBehaviour
             _somethingKilled = KillTwo(p1, p2, team);
             if (_somethingKilled == true)
             {
-                Debug.Log("Kill 11");
                 _killCount += 2;
             }
         }
@@ -391,6 +387,7 @@ public class GamePiece : MonoBehaviour
                 _somethingKilled = KillOnlyOne(p1, p2, p3, team);
                 if (_somethingKilled == true)
                 {
+                    
                     // kill 2 minus 1 double count
                     _killCount -= 1;
                 }
@@ -433,8 +430,7 @@ public class GamePiece : MonoBehaviour
 
             _somethingKilled = KillTwo(p1, p2, team);
             if (_somethingKilled == true)
-            {
-                Debug.Log("Kill 12");
+            {                
                 _killCount += 2;
             }
         }
@@ -496,6 +492,7 @@ public class GamePiece : MonoBehaviour
                 p2 != null && p2._team == team)
         {
             AudioHelper.PlayClip2D(_killedSFX, 1);
+            StartHappyAnimation();
             PlayFeedback(p1);            
 
             Destroy(p1.gameObject);
@@ -513,6 +510,7 @@ public class GamePiece : MonoBehaviour
                 p2 != null && p2._team != team)
         {
             AudioHelper.PlayClip2D(_killedSFX, 1);
+            StartHappyAnimation();
             PlayFeedback(p1);
             PlayFeedback(p2);
 
@@ -535,6 +533,7 @@ public class GamePiece : MonoBehaviour
             p3._team == _team)
         {
             EliminateTwo(p1, p2);
+            StartHappyAnimation();
             _somethingKilled = true;
             return _somethingKilled;
         }
@@ -551,6 +550,7 @@ public class GamePiece : MonoBehaviour
             p4._team == _team)
         {
             EliminateTwo(p1, p2);
+            StartHappyAnimation();
             _somethingKilled = true;
             return _somethingKilled;
         }
@@ -583,6 +583,19 @@ public class GamePiece : MonoBehaviour
     {        
         _killedVisual = Instantiate(_killedFX, p.transform.position, Quaternion.identity);
         _killedVisual.Play();        
+    }
+
+    private void StartHappyAnimation()
+    {
+        _isHappyAnimation.SetBool("isHappy", true);
+        StartCoroutine(StopHappyAnimation(_happyAnimationDuration));
+    }
+
+    private IEnumerator StopHappyAnimation(float duration)
+    {        
+        yield return new WaitForSeconds(duration);
+        _isHappyAnimation.SetBool("isHappy", false);
+
     }
 
 }
