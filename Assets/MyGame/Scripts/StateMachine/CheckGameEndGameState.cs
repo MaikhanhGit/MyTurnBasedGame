@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 public class CheckGameEndGameState : TurnBaseGameState
 {
@@ -11,9 +12,13 @@ public class CheckGameEndGameState : TurnBaseGameState
     private bool _won = false;
     private int _wonScene = 2;
     private int _lostScene = 3;
-    private int _tieScene = 4;
+    private int _tieScene = 4;    
+    private float _LoadSceneDelayDuration = 2f;
+    public float _exitDelay = 2f;
 
-        
+    public static event Action AITurnBegan;
+    public static event Action AITurnEnded;
+
     public override void Enter()
     {
         _AITotalCount = StateMachine.Board.AIPieceCount;
@@ -24,23 +29,25 @@ public class CheckGameEndGameState : TurnBaseGameState
     public override void Tick()
     {
         if(_playerTotalCount == 1 && _AITotalCount == 1)
-        {            
+        {
             // open scene
-            LoadTie();
+            StartCoroutine(LoadTie());
         }
 
         if(_playerTotalCount <= 0)
         {
-            LoadLose();
+            StartCoroutine(LoadLose());
         }
 
-        if(_AITotalCount <= 0 || _won == true)
+        if (_AITotalCount <= 0 || _won == true)
         {
-            LoadWon();
-            
+            StartCoroutine(LoadWon());
         }
-        
-        Exit();
+
+        else
+        {
+            StartCoroutine(StartExit());
+        }
         
     }
 
@@ -50,26 +57,39 @@ public class CheckGameEndGameState : TurnBaseGameState
 
         if (_playersTurn == true)
         {
+            
             StateMachine.ChangeState<AITurnGameState>();
         }
         else if (_playersTurn == false)
         {
-            StateMachine.ChangeState<PlayerTurnGameState>();
+            AITurnEnded?.Invoke();
+            StateMachine.ChangeState<PlayerTurnGameState>(); ;
         }        
     }
 
-    private void LoadWon()
+    private IEnumerator LoadWon()
     {
+        yield return new WaitForSeconds(_LoadSceneDelayDuration);
         SceneManager.LoadScene(_wonScene);
     }
 
-    private void LoadLose()
+    private IEnumerator LoadLose()
     {
+        yield return new WaitForSeconds(_LoadSceneDelayDuration);
         SceneManager.LoadScene(_lostScene);
     }
 
-    private void LoadTie()
+    private IEnumerator LoadTie()
     {
+        yield return new WaitForSeconds(_LoadSceneDelayDuration);
         SceneManager.LoadScene(_tieScene);
     }
+
+    private IEnumerator StartExit()
+    {
+        AITurnBegan?.Invoke();
+        yield return new WaitForSeconds(_exitDelay);
+        Exit();
+    }
+    
 }

@@ -15,6 +15,8 @@ public class GamePiece : MonoBehaviour
     [SerializeField] ParticleSystem _killedFX;
     [SerializeField] Animator _happyAnimation;
     [SerializeField] float _happyAnimationDuration = 2;
+    [SerializeField] float _destroyDelay = 2f;
+
     public int _team;
     public int _currentX;   
     public int _currentY;
@@ -25,11 +27,11 @@ public class GamePiece : MonoBehaviour
     private bool _audioPlayed = false;
     private bool _somethingKilled = false;
     private ParticleSystem _killedVisual;
-    private Animator _isHappyAnimation;
+    private Animator _animation;
 
     private void Awake()
     {
-        _isHappyAnimation = _happyAnimation.GetComponent<Animator>();
+        _animation = _happyAnimation.GetComponent<Animator>();
     }
 
     private void Update()
@@ -482,7 +484,7 @@ public class GamePiece : MonoBehaviour
                 }
             }
         }
-
+                
         return _killCount;
 
     }
@@ -493,12 +495,12 @@ public class GamePiece : MonoBehaviour
         {
             AudioHelper.PlayClip2D(_killedSFX, 1);
             StartHappyAnimation();
-            PlayFeedback(p1);            
+            PlayFeedback(p1);
 
-            Destroy(p1.gameObject);
-            p1 = null;
+            StartCoroutine(StartDestroyOne(p1));
             _somethingKilled = true;
             return _somethingKilled;
+
         }
         _somethingKilled = false;
         return _somethingKilled;
@@ -514,12 +516,10 @@ public class GamePiece : MonoBehaviour
             PlayFeedback(p1);
             PlayFeedback(p2);
 
-            Destroy(p1.gameObject);
-            p1 = null;
-            Destroy(p2.gameObject);
-            p2 = null;
+            StartCoroutine(StartDestroyTwo(p1, p2));
             _somethingKilled = true;
             return _somethingKilled;
+
         }
         _somethingKilled = false;
         return _somethingKilled;
@@ -532,8 +532,8 @@ public class GamePiece : MonoBehaviour
             p2._team != team &&
             p3._team == _team)
         {
-            EliminateTwo(p1, p2);
             StartHappyAnimation();
+            EliminateTwo(p1, p2);
             _somethingKilled = true;
             return _somethingKilled;
         }
@@ -549,8 +549,8 @@ public class GamePiece : MonoBehaviour
             p3._team == _team &&
             p4._team == _team)
         {
-            EliminateTwo(p1, p2);
             StartHappyAnimation();
+            EliminateTwo(p1, p2);
             _somethingKilled = true;
             return _somethingKilled;
         }
@@ -564,11 +564,7 @@ public class GamePiece : MonoBehaviour
         PlayFeedback(p1);
         PlayFeedback(p2);
 
-        Destroy(p1.gameObject);
-        p1 = null;
-        
-        Destroy(p2.gameObject);
-        p2 = null;
+        StartCoroutine(StartDestroyTwo(p1, p2));
     }
 
     private void PlayMoveSFX()
@@ -587,16 +583,34 @@ public class GamePiece : MonoBehaviour
 
     private void StartHappyAnimation()
     {
-        _isHappyAnimation.SetBool("isHappy", true);
+        _animation.SetBool("isHappy", true);
         StartCoroutine(StopHappyAnimation(_happyAnimationDuration));
     }
 
     private IEnumerator StopHappyAnimation(float duration)
     {        
         yield return new WaitForSeconds(duration);
-        _isHappyAnimation.SetBool("isHappy", false);
-
+        _animation.SetBool("isHappy", false);
     }
 
+    private IEnumerator StartDestroyOne(GamePiece p)
+    {
+        p._animation.SetBool("isDead", true);        
+        yield return new WaitForSeconds(_destroyDelay);        
+        Destroy(p.gameObject);
+        p = null;
+    }
+
+    private  IEnumerator StartDestroyTwo(GamePiece p1, GamePiece p2)
+    {
+        p1._animation.SetBool("isDead", true);
+        p2._animation.SetBool("isDead", true);
+        yield return new WaitForSeconds(_destroyDelay);
+        Destroy(p1.gameObject);
+        p1 = null;
+        Destroy(p2.gameObject);
+        p2 = null;
+    }
+    
 }
 

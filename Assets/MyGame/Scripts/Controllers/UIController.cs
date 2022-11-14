@@ -10,14 +10,14 @@ public class UIController : MonoBehaviour
 
     private void OnEnable()
     {
-        AITurnGameState.AITurnBegan += OnAITurnBegan;
-        AITurnGameState.AITurnEnded += OnAITurnEnded;
+        CheckGameEndGameState.AITurnBegan += OnAITurnBegan;
+        CheckGameEndGameState.AITurnEnded += OnAITurnEnded;
     }
 
     private void OnDisable()
     {
-        AITurnGameState.AITurnBegan -= OnAITurnBegan;
-        AITurnGameState.AITurnEnded -= OnAITurnEnded;
+        CheckGameEndGameState.AITurnBegan -= OnAITurnBegan;
+        CheckGameEndGameState.AITurnEnded -= OnAITurnEnded;
     }
 
     private void Start()
