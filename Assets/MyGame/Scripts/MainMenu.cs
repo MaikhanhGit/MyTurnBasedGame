@@ -6,7 +6,10 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] AudioClip _onButtonClickSFX;
+    [SerializeField] AudioClip _onButtonHoverSFX;
     [SerializeField] float _startGameDelay = .3f;
+
+
    public void StartGame()
     {
         Time.timeScale = 1f;
@@ -22,6 +25,11 @@ public class MainMenu : MonoBehaviour
     public void OnButtonClickSFX()
     {
         AudioHelper.PlayClip2D(_onButtonClickSFX, 1);
+    }
+
+    public void OnButtonHoverSFX()
+    {
+        AudioHelper.PlayClip2D(_onButtonHoverSFX, 1);
     }
 
     public void QuitGame()

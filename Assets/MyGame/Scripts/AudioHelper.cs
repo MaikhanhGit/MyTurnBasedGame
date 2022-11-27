@@ -14,7 +14,9 @@ public class AudioHelper
         audioSource.volume = volume;
         // activate
         audioSource.Play();
-        Object.Destroy(audioObject, clip.length);
+       // Object.Destroy(audioObject, clip.length);
+        Object.Destroy(audioObject.gameObject, clip.length);
+   
         // return in case other things need it
         return audioSource;
     }
