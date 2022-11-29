@@ -7,6 +7,9 @@ public class MainMenu : MonoBehaviour
 {
     [SerializeField] AudioClip _onButtonClickSFX;
     [SerializeField] AudioClip _onButtonHoverSFX;
+    [SerializeField] AudioClip _onVolumeButtonDownSFX;
+    [SerializeField] AudioClip _onVolumeButtonUpSFX;
+    
     [SerializeField] float _startGameDelay = .3f;
 
 
@@ -32,9 +35,18 @@ public class MainMenu : MonoBehaviour
         AudioHelper.PlayClip2D(_onButtonHoverSFX, 1);
     }
 
-    public void QuitGame()
+    public void OnVolumeButtonDownSFX()
     {
-        Debug.Log("Quit");
+        AudioHelper.PlayClip2D(_onVolumeButtonDownSFX, .5f);
+    }
+
+    public void OnVolumeButtonUpSFX()
+    {
+        AudioHelper.PlayClip2D(_onVolumeButtonUpSFX, .5f);
+    }
+
+    public void QuitGame()
+    {       
         Application.Quit();
     }
 
