@@ -9,11 +9,16 @@ public class MainMenu : MonoBehaviour
     [SerializeField] AudioClip _onButtonHoverSFX;
     [SerializeField] AudioClip _onVolumeButtonDownSFX;
     [SerializeField] AudioClip _onVolumeButtonUpSFX;
-    
+    [SerializeField] AudioClip _backgroundMusic;    
     [SerializeField] float _startGameDelay = .3f;
 
+    private void Start()
+    {
+        MusicPlayer.Instance.PlayNewSong(_backgroundMusic);
+    }
+       
 
-   public void StartGame()
+    public void StartGame()
     {
         Time.timeScale = 1f;
         StartCoroutine(StartGameDelay(_startGameDelay));
@@ -27,12 +32,18 @@ public class MainMenu : MonoBehaviour
 
     public void OnButtonClickSFX()
     {
-        AudioHelper.PlayClip2D(_onButtonClickSFX, 1);
+        if (_onButtonClickSFX)
+        {
+            AudioHelper.PlayClip2D(_onButtonClickSFX, 1);
+        }        
     }
 
     public void OnButtonHoverSFX()
     {
-        AudioHelper.PlayClip2D(_onButtonHoverSFX, 1);
+        if (_onButtonHoverSFX)
+        {
+            AudioHelper.PlayClip2D(_onButtonHoverSFX, 1);
+        }        
     }
 
     public void OnVolumeButtonDownSFX()
@@ -42,7 +53,10 @@ public class MainMenu : MonoBehaviour
 
     public void OnVolumeButtonUpSFX()
     {
-        AudioHelper.PlayClip2D(_onVolumeButtonUpSFX, .5f);
+        if (_onVolumeButtonUpSFX)
+        {
+            AudioHelper.PlayClip2D(_onVolumeButtonUpSFX, .5f);
+        }
     }
 
     public void QuitGame()
@@ -54,5 +68,10 @@ public class MainMenu : MonoBehaviour
     {
         yield return new WaitForSeconds(duration);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    public void ChangeMusicVolume(float newVolume)
+    {
+        MusicPlayer.Instance.UpdateVolume(newVolume);
     }
 }

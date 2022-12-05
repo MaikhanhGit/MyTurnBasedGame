@@ -46,10 +46,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSFX: {fileID: 0}
-  _killedSFX: {fileID: 8300000, guid: 5b03b92936cd03d498ac4796992f2b2b, type: 3}
+  _killedSFX: {fileID: 8300000, guid: 64c78ace25dcfd649b9de52d1c3a66c7, type: 3}
   _killedFX: {fileID: 19800000, guid: b8ad56b28a6aaf147b1b3c7499274392, type: 3}
   _happyAnimation: {fileID: 1093220329021441504}
   _happyAnimationDuration: 2
+  _destroyDelay: 1.5
   _team: 0
   _currentX: 0
   _currentY: 0

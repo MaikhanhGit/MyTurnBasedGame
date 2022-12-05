@@ -1,14 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class MusicPlayer : MonoBehaviour
-{
-    [SerializeField] AudioSource _audioSource;
-    [SerializeField] float _volume = 1f;
+public class MusicPlayer : SingletonMB<MusicPlayer>
+{       
+    AudioSource _audioSource;
+    float _volume = 1f;
 
-    private void Start()
+    private void Awake()
     {
+        _audioSource = gameObject.AddComponent<AudioSource>();
+        _audioSource.loop = true;
+    }
+
+   public void PlayNewSong(AudioClip newSong)
+    {
+        if (newSong == null) return;    // guard clause
+
+        _audioSource.clip = newSong;
         _audioSource.Play();
     }
 
@@ -19,6 +29,6 @@ public class MusicPlayer : MonoBehaviour
 
     public void UpdateVolume(float volume)
     {
-        _volume = volume;
+        _volume = volume;        
     }
 }

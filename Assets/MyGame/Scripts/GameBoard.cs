@@ -69,6 +69,11 @@ public class GameBoard : MonoBehaviour
     {
         if (_playersTurn == true)
         {
+            if (_playerPieceCount <= 0 || _AIPieceCount <= 0 || (_playerPieceCount == 1 && _AIPieceCount == 1))
+            {
+                PlayerTurnGameState.Exit();
+            }
+
             if (_currentCamera == null)
             {
                 _currentCamera = Camera.main;
@@ -196,6 +201,11 @@ public class GameBoard : MonoBehaviour
             // if AI's turn
         if (_AIsTurn == true)
         {
+            if (_playerPieceCount <= 0 || _AIPieceCount <= 0 || (_playerPieceCount == 1 && _AIPieceCount == 1))
+            {
+                AITurnGameState.Exit();
+            }
+
             List<Vector2Int> availableMoves = new List<Vector2Int>();
             // pick a random AI piece
             for (int x = 0; x < TILE_COUNT_X; x++)
@@ -264,7 +274,7 @@ public class GameBoard : MonoBehaviour
         _playerRemainingCountText.text = "Player's Remaining Pieces: " + _playerPieceCount.ToString();
         _currentPlayersTurn = false;
         // change state            
-        AITurnGameState.Exit();
+        //AITurnGameState.Exit();
     }
     
 
@@ -281,7 +291,8 @@ public class GameBoard : MonoBehaviour
     public void ActivatePlayersTurn()
     {        
         _AIsTurn = false;
-        _playersTurn = true;        
+        _playersTurn = true;
+        _AITurnGameState.Exit();
     }
 
     public void DeactivatePlayersTurn()
@@ -382,7 +393,7 @@ public class GameBoard : MonoBehaviour
     {
         if(_playersTurn == true)
         {
-            AudioHelper.PlayClip2D(_playerMoveSFX, 1);
+            AudioHelper.PlayClip2D(_playerMoveSFX, 1.5f);
         }
         
         _gamePieces[x, y]._currentX = x;

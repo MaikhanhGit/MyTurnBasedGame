@@ -14,7 +14,7 @@ public class CheckGameEndGameState : TurnBaseGameState
     private int _lostScene = 3;
     private int _tieScene = 4;    
     private float _LoadSceneDelayDuration = 2f;
-    public float _exitDelay = 2f;
+    public float _exitDelay = 1f;
 
     public static event Action AITurnBegan;
     public static event Action AITurnEnded;
@@ -22,7 +22,7 @@ public class CheckGameEndGameState : TurnBaseGameState
     public override void Enter()
     {
         _AITotalCount = StateMachine.Board.AIPieceCount;
-        _playerTotalCount = StateMachine.Board.PlayerPieceCount;
+        _playerTotalCount = StateMachine.Board.PlayerPieceCount;        
         _won = StateMachine.Board.Won;        
     }
 
@@ -34,12 +34,12 @@ public class CheckGameEndGameState : TurnBaseGameState
             StartCoroutine(LoadTie());
         }
 
-        if(_playerTotalCount <= 0)
+        else if(_playerTotalCount <= 0)
         {
             StartCoroutine(LoadLose());
         }
 
-        if (_AITotalCount <= 0 || _won == true)
+        else if (_AITotalCount <= 0 || _won == true)
         {
             StartCoroutine(LoadWon());
         }
@@ -68,7 +68,7 @@ public class CheckGameEndGameState : TurnBaseGameState
     }
 
     private IEnumerator LoadWon()
-    {
+    {        
         yield return new WaitForSeconds(_LoadSceneDelayDuration);
         SceneManager.LoadScene(_wonScene);
     }

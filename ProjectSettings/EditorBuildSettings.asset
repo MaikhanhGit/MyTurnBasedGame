@@ -16,8 +16,8 @@ EditorBuildSettings:
     guid: 74f24450d5abe504f87bc0f10759526b
   - enabled: 1
     path: Assets/MyGame/Scenes/EndGameLose.unity
-    guid: 7aca983c18c8f8740b162a1e9c9b06f8
+    guid: 72de8d6d1936a674eb54c13bdc413fcd
   - enabled: 1
     path: Assets/MyGame/Scenes/EndGameTie.unity
-    guid: f211efa00577d0147acf35b9b800a557
+    guid: 7ca87664de913294ba8473ca4945835f
   m_configObjects: {}

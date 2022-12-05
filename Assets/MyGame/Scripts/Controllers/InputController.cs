@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 public class InputController : MonoBehaviour
 {
     [SerializeField] GameObject _pauseMenu;
+    [SerializeField] AudioClip _onButtonHoverSFX;
+    [SerializeField] AudioClip _onButtonClickSFX;
 
     public event Action PressedConfirm = delegate { };
     public event Action PressedCancel = delegate { };
@@ -65,5 +67,15 @@ public class InputController : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
-   
+
+    public void OnButtonClickSFX()
+    {
+        AudioHelper.PlayClip2D(_onButtonClickSFX, 1);
+    }
+
+    public void OnButtonHoverSFX()
+    {
+        AudioHelper.PlayClip2D(_onButtonHoverSFX, 1);
+    }
+
 }

@@ -571,7 +571,7 @@ public class GamePiece : MonoBehaviour
     {
         if (_moveSFX != null)
         {
-            AudioHelper.PlayClip2D(_moveSFX, 1);
+            AudioHelper.PlayClip2D(_moveSFX, 2f);
         }
     }  
 
