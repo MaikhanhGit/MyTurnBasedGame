@@ -51,6 +51,8 @@ MonoBehaviour:
   _happyAnimation: {fileID: 7184026246760692387}
   _happyAnimationDuration: 2
   _destroyDelay: 1.5
+  _particlePool: {fileID: 879573877091356726, guid: cb224bd886d942b45bd4cec31e365ccf,
+    type: 3}
   _team: 1
   _currentX: 0
   _currentY: 0

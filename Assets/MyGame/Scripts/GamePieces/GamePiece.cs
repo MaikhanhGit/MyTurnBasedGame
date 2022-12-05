@@ -15,7 +15,7 @@ public class GamePiece : MonoBehaviour
     [SerializeField] ParticleSystem _killedFX;
     [SerializeField] Animator _happyAnimation;
     [SerializeField] float _happyAnimationDuration = 2;
-    [SerializeField] float _destroyDelay = 2f;
+    [SerializeField] float _destroyDelay = 2f;    
 
     public int _team;
     public int _currentX;   
@@ -121,13 +121,14 @@ public class GamePiece : MonoBehaviour
     public virtual void SetPosition(Vector3 position, bool force = false)
     {
         PlayMoveSFX();
-        _desiredPosition = position;                 
-
+        _desiredPosition = position;
+        
         if (force == true)
         {            
             transform.position = _desiredPosition;
         }
     }
+    
 
     public virtual void SetScale(Vector3 scale, bool force = false)
     {
@@ -571,7 +572,7 @@ public class GamePiece : MonoBehaviour
     {
         if (_moveSFX != null)
         {
-            AudioHelper.PlayClip2D(_moveSFX, 2f);
+            AudioHelper.PlayClip2D(_moveSFX, 1f);
         }
     }  
 

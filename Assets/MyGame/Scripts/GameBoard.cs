@@ -17,7 +17,7 @@ public class GameBoard : MonoBehaviour
     [SerializeField] private float _draggOffset = 1;
     [SerializeField] TextMeshProUGUI _playerRemainingCountText;
     [SerializeField] TextMeshProUGUI _AIRemainingCountText;
-
+    [SerializeField] ParticlePool _particlePool = null;
 
     [Header("Prefabs & Materials")]
     [SerializeField] private GameObject[] _prefabs;
@@ -399,6 +399,15 @@ public class GameBoard : MonoBehaviour
         _gamePieces[x, y]._currentX = x;
         _gamePieces[x, y]._currentY = y;
         _gamePieces[x, y].SetPosition(GetTileCenter(x, y), force);
+
+        Vector3 newPosition = GetTileCenter(x, y);
+        // get a particle from pool and turn it on
+        Particle newParticle = _particlePool.ActivateFromPool();
+        // give it the pool so it can return itself whenever it needs
+        newParticle.AssignPool(_particlePool);
+        // move it to the position we want and enable
+        newParticle.transform.position = newPosition;
+        newParticle.gameObject.SetActive(true);
     }
 
     private Vector3 GetTileCenter(int x, int y)
