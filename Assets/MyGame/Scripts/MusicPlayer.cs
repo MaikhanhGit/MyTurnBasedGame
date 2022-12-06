@@ -5,30 +5,53 @@ using UnityEngine.UI;
 
 public class MusicPlayer : SingletonMB<MusicPlayer>
 {       
-    AudioSource _audioSource;
-    float _volume = .5f;
+    AudioSource _audioSource01;
+    AudioSource _audioSource02;
+    float _musicVolume = .3f;
+    float _ambienceVolume = .5f;
 
     private void Awake()
     {
-        _audioSource = gameObject.AddComponent<AudioSource>();
-        _audioSource.loop = true;
+        _audioSource01 = gameObject.AddComponent<AudioSource>();
+        _audioSource01.loop = true;
+        _audioSource02 = gameObject.AddComponent<AudioSource>();
+        _audioSource02.loop = true;
     }
 
-   public void PlayNewSong(AudioClip newSong)
+    // this music player is specialized to play 2 audio clips at once
+   public void PlayNewSong(AudioClip newSong01, AudioClip newSong02, float volume01, float volume02)
     {
-        if (newSong == null) return;    // guard clause
+        if (newSong01 == null && newSong02 == null) return;    // guard clause
 
-        _audioSource.clip = newSong;        
-        _audioSource.Play();
+        if(newSong01 != null)
+        {
+            _audioSource01.clip = newSong01;
+            _audioSource01.volume = volume01;
+            _audioSource01.Play();
+        }
+        if (newSong02 != null)
+        {
+            _audioSource02.clip = newSong02;
+            _audioSource02.volume = volume02;
+            _audioSource02.Play();
+        }
+
+
     }
 
     private void Update()
-    {
-        _audioSource.volume = _volume;
+    {        
+        _audioSource01.volume = _musicVolume;
+        _audioSource02.volume = _ambienceVolume;
     }
 
-    public void UpdateVolume(float volume)
+    public void UpdateMusicVolume(float volume)
     {
-        _volume = volume;        
+        _musicVolume = volume;        
+    }
+
+    public void UpdateAmbienceVolume(float volume)
+    {
+        _ambienceVolume = volume;
     }
 }

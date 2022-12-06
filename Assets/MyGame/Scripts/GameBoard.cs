@@ -18,10 +18,11 @@ public class GameBoard : MonoBehaviour
     [SerializeField] TextMeshProUGUI _playerRemainingCountText;
     [SerializeField] TextMeshProUGUI _AIRemainingCountText;
     [SerializeField] ParticlePool _particlePool = null;
+    [SerializeField] Animator _AIcountTextAnimation = null;
+    [SerializeField] Animator _playerCountTextAnimation = null;
 
     [Header("Prefabs & Materials")]
-    [SerializeField] private GameObject[] _prefabs;
-   // [SerializeField] private Material[] _teamMaterial;
+    [SerializeField] private GameObject[] _prefabs;   
     [SerializeField] AudioClip _playerMoveSFX;
     [SerializeField] PlayerTurnGameState _playerTurnGameState;
     [SerializeField] AITurnGameState _AITurnGameState;
@@ -52,7 +53,9 @@ public class GameBoard : MonoBehaviour
     int _AITeam = 1;
     private int _playerPieceCount = 7;
     private int _AIPieceCount = 7;
-    
+    private Animator _AICountTextAnim = null;
+    private Animator _playerCountTextAnim = null;
+
     public int PlayerPieceCount => _playerPieceCount;
     public int AIPieceCount => _AIPieceCount;
     public bool CurrentPlayersTurn => _currentPlayersTurn;
@@ -63,7 +66,10 @@ public class GameBoard : MonoBehaviour
         PlayerTurnGameState = _playerTurnGameState.GetComponent<PlayerTurnGameState>();
         AITurnGameState = _AITurnGameState.GetComponent<AITurnGameState>();
         SetupGameState = _setupGameState.GetComponent<SetupGameState>();
-        CheckGameEndState = _checkGameEndState.GetComponent<CheckGameEndGameState>();        
+        CheckGameEndState = _checkGameEndState.GetComponent<CheckGameEndGameState>();
+
+        _AICountTextAnim = _AIcountTextAnimation.GetComponent<Animator>();
+        _playerCountTextAnim = _playerCountTextAnimation.GetComponent<Animator>();
     }
     private void Update()
     {
@@ -147,6 +153,7 @@ public class GameBoard : MonoBehaviour
                         if(_AIPieceCount <= 3)
                         {
                             _AIRemainingCountText.color = Color.red;
+                            _AICountTextAnim.SetBool("isFlashing", true);
                         }
                         
                         _AIRemainingCountText.text = "Opponent's Remaining Pieces: " + _AIPieceCount.ToString();
@@ -271,9 +278,10 @@ public class GameBoard : MonoBehaviour
         if(_playerPieceCount <= 3)
         {
             _playerRemainingCountText.color = Color.red;
+            _playerCountTextAnim.SetBool("isFlashing", true);
         }
         
-        _playerRemainingCountText.text = "Player's Remaining Pieces: " + _playerPieceCount.ToString();
+        _playerRemainingCountText.text = "Your Remaining Pieces: " + _playerPieceCount.ToString();
         _currentPlayersTurn = false;
         // change state            
         //AITurnGameState.Exit();

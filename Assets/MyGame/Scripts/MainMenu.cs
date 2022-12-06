@@ -9,12 +9,15 @@ public class MainMenu : MonoBehaviour
     [SerializeField] AudioClip _onButtonHoverSFX;
     [SerializeField] AudioClip _onVolumeButtonDownSFX;
     [SerializeField] AudioClip _onVolumeButtonUpSFX;
-    [SerializeField] AudioClip _backgroundMusic;    
+    [SerializeField] AudioClip _backgroundMusic;
+    [SerializeField] AudioClip _ambience;
+    [SerializeField] float _bgMusicVolume = .3f;
+    [SerializeField] float _ambienceVolume = .5f;
     [SerializeField] float _startGameDelay = .3f;
 
     private void Start()
     {
-        MusicPlayer.Instance.PlayNewSong(_backgroundMusic);
+        MusicPlayer.Instance.PlayNewSong(_backgroundMusic, _ambience, _bgMusicVolume, _ambienceVolume);        
     }
        
 
@@ -72,6 +75,11 @@ public class MainMenu : MonoBehaviour
 
     public void ChangeMusicVolume(float newVolume)
     {
-        MusicPlayer.Instance.UpdateVolume(newVolume);
+        MusicPlayer.Instance.UpdateMusicVolume(newVolume);
+    }
+
+    public void ChangeAmbienceVolume(float newVolume)
+    {
+        MusicPlayer.Instance.UpdateAmbienceVolume(newVolume);
     }
 }
