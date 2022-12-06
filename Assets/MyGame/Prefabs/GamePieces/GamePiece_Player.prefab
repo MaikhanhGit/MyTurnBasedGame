@@ -51,6 +51,8 @@ MonoBehaviour:
   _happyAnimation: {fileID: 7184026246760692387}
   _happyAnimationDuration: 2
   _destroyDelay: 1.5
+  _killLightsPool: {fileID: 4305719813440887969, guid: fbcbdf053c38c2a41a9480b0bdb707f7,
+    type: 3}
   _team: 1
   _currentX: 0
   _currentY: 0

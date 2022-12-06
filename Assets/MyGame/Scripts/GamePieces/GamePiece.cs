@@ -596,7 +596,8 @@ public class GamePiece : MonoBehaviour
 
     private IEnumerator StartDestroyOne(GamePiece p)
     {
-        p._animation.SetBool("isDead", true);        
+        p._animation.SetBool("isDead", true);
+        
         yield return new WaitForSeconds(_destroyDelay);        
         Destroy(p.gameObject);
         p = null;
@@ -606,6 +607,7 @@ public class GamePiece : MonoBehaviour
     {
         p1._animation.SetBool("isDead", true);
         p2._animation.SetBool("isDead", true);
+       
         yield return new WaitForSeconds(_destroyDelay);
         Destroy(p1.gameObject);
         p1 = null;
@@ -613,5 +615,6 @@ public class GamePiece : MonoBehaviour
         p2 = null;
     }
     
+   
 }
 
