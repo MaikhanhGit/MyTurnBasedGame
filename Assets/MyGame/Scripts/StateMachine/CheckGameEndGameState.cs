@@ -8,7 +8,7 @@ public class CheckGameEndGameState : TurnBaseGameState
 {
     private int _playerTotalCount = 7;
     private int _AITotalCount = 7;
-    private bool _playersTurn = false;
+    private bool _currentPlayersTurn = false;
     private bool _won = false;
     private int _wonScene = 2;
     private int _lostScene = 3;
@@ -21,6 +21,7 @@ public class CheckGameEndGameState : TurnBaseGameState
 
     public override void Enter()
     {
+        AITurnBegan?.Invoke();
         _AITotalCount = StateMachine.Board.AIPieceCount;
         _playerTotalCount = StateMachine.Board.PlayerPieceCount;        
         _won = StateMachine.Board.Won;        
@@ -53,14 +54,13 @@ public class CheckGameEndGameState : TurnBaseGameState
 
     public override void Exit()
     {        
-        _playersTurn = StateMachine.Board.CurrentPlayersTurn;
+        _currentPlayersTurn = StateMachine.Board.CurrentPlayersTurn;
 
-        if (_playersTurn == true)
-        {
-            
+        if (_currentPlayersTurn == true)
+        {            
             StateMachine.ChangeState<AITurnGameState>();
         }
-        else if (_playersTurn == false)
+        else if (_currentPlayersTurn == false)
         {
             AITurnEnded?.Invoke();
             StateMachine.ChangeState<PlayerTurnGameState>(); ;
@@ -87,7 +87,7 @@ public class CheckGameEndGameState : TurnBaseGameState
 
     private IEnumerator StartExit()
     {
-        AITurnBegan?.Invoke();
+        // AITurnBegan?.Invoke();
         yield return new WaitForSeconds(_exitDelay);
         Exit();
     }

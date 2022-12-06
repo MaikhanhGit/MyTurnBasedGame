@@ -45,14 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d0ffadc4f817824fa2ac20342772471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSFX: {fileID: 8300000, guid: 58eaacac4cb6f2c4c81551a1435996e4, type: 3}
+  _moveSFX: {fileID: 8300000, guid: 5da2b35b4b4085e47b22e6f15bfde72f, type: 3}
   _killedSFX: {fileID: 8300000, guid: eb1c7922e15878144aad14e3de43d5c1, type: 3}
   _killedFX: {fileID: 19800000, guid: 1ddfc06af0f94704fbe00321e9f64364, type: 3}
   _happyAnimation: {fileID: 7184026246760692387}
   _happyAnimationDuration: 2
   _destroyDelay: 1.5
-  _particlePool: {fileID: 879573877091356726, guid: cb224bd886d942b45bd4cec31e365ccf,
-    type: 3}
   _team: 1
   _currentX: 0
   _currentY: 0

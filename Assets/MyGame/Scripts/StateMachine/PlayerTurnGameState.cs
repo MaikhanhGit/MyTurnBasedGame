@@ -33,7 +33,7 @@ public class PlayerTurnGameState : TurnBaseGameState
     {
         _playerTurnTextUI.gameObject.SetActive(false);
         //StateMachine.PlayerInput.PressedConfirm -= OnPressedConfirm;
-        // change to the AI turn state
+        // change to the AI turn state        
         StateMachine.ChangeState<CheckGameEndGameState>();        
     }    
 

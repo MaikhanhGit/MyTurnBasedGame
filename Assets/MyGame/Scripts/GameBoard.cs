@@ -72,6 +72,7 @@ public class GameBoard : MonoBehaviour
             if (_playerPieceCount <= 0 || _AIPieceCount <= 0 || (_playerPieceCount == 1 && _AIPieceCount == 1))
             {
                 PlayerTurnGameState.Exit();
+                return;
             }
 
             if (_currentCamera == null)
@@ -204,6 +205,7 @@ public class GameBoard : MonoBehaviour
             if (_playerPieceCount <= 0 || _AIPieceCount <= 0 || (_playerPieceCount == 1 && _AIPieceCount == 1))
             {
                 AITurnGameState.Exit();
+                return;
             }
 
             List<Vector2Int> availableMoves = new List<Vector2Int>();
@@ -299,6 +301,8 @@ public class GameBoard : MonoBehaviour
     {        
         _playersTurn = false;
         _AIsTurn = true;
+        _playerTurnGameState.Exit();
+        return;
     }
 
     // Generate the game board
@@ -491,14 +495,7 @@ public class GameBoard : MonoBehaviour
     {
         _tiles[hitPosition.x, hitPosition.y].layer = LayerMask.NameToLayer("Hover");
         _tiles[hitPosition.x, hitPosition.y].GetComponent<MeshRenderer>().material = _hoverMaterial;
-    }     
-   
-    public int CheckKill()
-    {
-        int killCount = 0;
-
-        return killCount;
-    }
+    }         
 
     // flashing text
     private void FlashingText()

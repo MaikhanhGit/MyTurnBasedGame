@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2184.8428, g: 2327.8105, b: 3486.875, a: 1}
+  m_IndirectSpecularColor: {r: 2161.837, g: 2265.7695, b: 3288.9688, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -793,7 +793,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2c1097560137ed4ebfe33d1ba738e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pauseDuration: 2
+  _pauseDuration: 1.6
 --- !u!114 &373557460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -914,7 +914,7 @@ MonoBehaviour:
   _prefabs:
   - {fileID: 8255377790545285495, guid: 4d9e91ba4e30b6d42bccdbd6183b2837, type: 3}
   - {fileID: 1789636221855024741, guid: c38ee9e0e64c95848aa217fe7f6d249a, type: 3}
-  _playerMoveSFX: {fileID: 8300000, guid: 4f49fa15a0a65de42b309352c5d31b7a, type: 3}
+  _playerMoveSFX: {fileID: 8300000, guid: 77982ef8408acf34988d4591ac62b8c0, type: 3}
   _playerTurnGameState: {fileID: 373557458}
   _AITurnGameState: {fileID: 373557459}
   _setupGameState: {fileID: 373557457}
